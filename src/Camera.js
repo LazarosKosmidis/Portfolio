@@ -24,6 +24,9 @@ const Camera = () => {
 
     // Attach the wheel event listener
     useEffect(() => {
+        if (camera.position.y >= 10 || camera.position.y <= -10) {
+            return;
+        }
         const handleWheelEvent = (event) => handleWheel(event);
         window.addEventListener("wheel", handleWheelEvent);
 
@@ -34,6 +37,7 @@ const Camera = () => {
 
     // Update camera position on every frame
     useFrame(() => {
+
         // Interpolate camera position towards the target position with damping
         camera.position.lerp(targetPosition, dampingFactor);
 

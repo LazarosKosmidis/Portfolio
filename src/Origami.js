@@ -13,7 +13,7 @@ const Origami = ({ positionOrigami }) => {
     const materialRef = useRef();
     const group = useRef();
     const [isMoving, setisMoving] = useState(true)
-    const texture = useLoader(TextureLoader, "/textures/26_arina_kashchavtseva.jpg");
+    const texture = useLoader(TextureLoader, "/textures/05_anahanum.jpg");
     texture.repeat.set(0.5, 0.3)
     texture.offset.set(0, 0.03);
     const { isLetterVisible, setIsLetterVisible } = useStateContext();
@@ -103,7 +103,6 @@ const Origami = ({ positionOrigami }) => {
     // This will run every frame
     return (
         <group ref={group} position={[-3, 0.5, 0]}>
-
             <mesh
                 geometry={geometry}
                 position={[-1, -1.5, 0]}
