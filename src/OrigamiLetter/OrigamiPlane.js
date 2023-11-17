@@ -4,7 +4,7 @@ import { PlaneGeometry } from "three";
 import { useStateContext } from "../GlobalContext/StateContext.js";
 import { TextureLoader } from "three";
 
-import { useLoader } from "@react-three/fiber/dist/react-three-fiber.cjs";
+import { useLoader } from "@react-three/fiber";
 import { Float } from "@react-three/drei";
 import gsap from "gsap";
 import * as THREE from "three";
@@ -15,128 +15,149 @@ const OrigamiPlane = () => {
     const { isLetterVisible, setIsLetterVisible } = useStateContext();
     const { isCameraMoving, setIsCameraMoving } = useStateContext();
 
-
     const texture = useLoader(TextureLoader, "/textures/26_arina_kashchavtseva.jpg");
-
-
-    // Set up the BufferGeometry with the initial vertices
-    const geometry1 = new PlaneGeometry(3, 2);
-    // Set up the BufferGeometry with the initial vertices
-    const height = Math.sqrt(3)
-
+    console.log(texture);
     const geometry = new THREE.BufferGeometry();
+    const geometryWidth = 1.82
+    const geometryHeight = 2
+    const vertices = new Float32Array([
+        //1-Right-Down
+        -geometryWidth, 0.0, 0,     //(0,1,2)
+        geometryWidth, 0.0, 0,      //(3,4,5)
+        geometryWidth, geometryHeight, 0, //(6,7,8)
+        //2-Left-Down
+        geometryWidth, geometryHeight, 0,   //(9,10,11)
+        -geometryWidth, geometryHeight, 0,//(12,13,14)
+        -geometryWidth, 0, 0,       //(15,16,17)
+        //3-Right-Middle
+        geometryWidth, geometryHeight, 0,       //(18,19,20)
+        -geometryWidth, geometryHeight, 0,      //(21,22,23)
+        geometryWidth, geometryHeight * 2, 0,   //(24,25,26)
 
-    const widthOrigami = 2
-    const heightOrigami = 2
-    const width_half = widthOrigami / 2;
-    const height_half = heightOrigami / 2;
+        //4-Left-Middle
+        geometryWidth, geometryHeight * 2, 0,   //(27,28,29)
+        -geometryWidth, geometryHeight, 0,      //(30,31,32)
+        -geometryWidth, geometryHeight * 2, 0,  //(33,34,35)
+        //5-Right-Top
+        geometryWidth, geometryHeight * 2, 0.0, //(36,37,38)
+        geometryWidth, geometryHeight * 3, 0.0, //(39,40,41)
+        -geometryWidth, geometryHeight * 2, 0.0,//(42,43,44)
+        //6-Left-Top
+        -geometryWidth, geometryHeight * 3, 0.0,//(45,46,47)
+        geometryWidth, geometryHeight * 3, 0.0, //(48,49,50)
+        -geometryWidth, geometryHeight * 2, 0.0,//(51,52,53)
 
-    const gridX = 1
-    const gridY = 1
+    ]);
+    const verticesNumber = 8
+    const normal = []
+    const uv = []
+    for (let i = 0; i < verticesNumber; i++) {
+        normal.push(0, 0, 1)
+    }
+    uv.push(0)
+    uv.push(0)
+    uv.push(1)
+    uv.push(0)
+    uv.push(1)
+    uv.push(1 / 3)
 
-    const gridX1 = gridX + 1;
-    const gridY1 = gridY + 1;
+    uv.push(1)
+    uv.push(1 / 3)
+    uv.push(0)
+    uv.push(1 / 3)
+    uv.push(0)
+    uv.push(0)
 
-    const segment_width = widthOrigami / gridX;
-    const segment_height = heightOrigami / gridY;
-    const [isnormalsOrigami, setIsNormalOrigami] = useState();
-    const [isuvsOrigami, setIsUvsOrigami] = useState();
-    const [isIndicesOrigami, setIsIndicesOrigami] = useState();
-    const [isnverticesOrigami, setIsVerticesOrigami] = useState();
+    uv.push(1)
+    uv.push(1 / 3)
+    uv.push(0)
+    uv.push(1 / 3)
+    uv.push(1)
+    uv.push(2 / 3)
 
-    useEffect(() => {
-        const normals = [];
-        const uvs = [];
-        const indices = [];
-        const vertices = [];
+    uv.push(1)
+    uv.push(2 / 3)
+    uv.push(0)
+    uv.push(1 / 3)
+    uv.push(0)
+    uv.push(2 / 3)
 
-        for (let iy = 0; iy < gridY1; iy++) {
-            const y = iy * segment_height - height_half;
-            for (let ix = 0; ix < gridX1; ix++) {
-                const x = ix * segment_width - width_half;
-                vertices.push(x, - y, 0);
-                normals.push(0, 0, 1);
-                uvs.push(ix / gridX);
-                uvs.push(1 - (iy / gridY));
-            }
-        }
-        for (let iy = 0; iy < gridY; iy++) {
-            for (let ix = 0; ix < gridX; ix++) {
-                const a = ix + gridX1 * iy;
-                const b = ix + gridX1 * (iy + 1);
-                const c = (ix + 1) + gridX1 * (iy + 1);
-                const d = (ix + 1) + gridX1 * iy;
-                indices.push(a, b, d);
-                indices.push(b, c, d);
-            }
-        }
+    uv.push(1)
+    uv.push(2 / 3)
+    uv.push(1)
+    uv.push(1)
+    uv.push(0)
+    uv.push(2 / 3)
 
-        setIsNormalOrigami(normals)
-        setIsUvsOrigami(uvs)
-        setIsIndicesOrigami(indices)
-        setIsVerticesOrigami(vertices)
-    }, []);
-    geometry.setIndex(isIndicesOrigami);
-    // const vertices = new Float32Array([
-    //     //1
-    //     -1.0, -1.0, 0,
-    //     1.0, -1.0, 0,
-    //     1.0, 1.0, 0,
-    //     //2
-    //     1.0, 1.0, 0,
-    //     -1.0, 1.0, 0,
-    //     -1.0, -1.0, 0,
-    //     //3
-    //     // 1.0, 1.0, 0,
-    //     // -1.0, 1.0, 0,
-    //     // 1.0, 3.0, 0,
-    //     // //4
-    //     // 1.0, 3.0, 0,
-    //     // -1.0, 1.0, 0,
-    //     // -1.0, 3.0, 0,
-    //     // //5
-    //     // 1.0, 3.0, 0.0,
-    //     // 1.0, 5.0, 0.0,
-    //     // -1.0, 3.0, 0.0,
-    //     // //6
-    //     // -1.0, 5.0, 0.0,
-    //     // 1.0, 5.0, 0.0,
-    //     // -1.0, 3.0, 0.0,
+    uv.push(0)
+    uv.push(1)
+    uv.push(1)
+    uv.push(1)
+    uv.push(0)
+    uv.push(2 / 3)
 
-    //     //7 left triangle
-    //     // -1.0, 1.0, 0.0,
-    //     // -1.0, -1.0, 0.0,
-    //     // -(height + 1), 0.0, 0.0,
-    //     // //8 left triangle
-    //     // 1.0, 1.0, 0.0,
-    //     // 1.0, -1.0, 0.0,
-    //     // (height + 1), 0.0, 0.0,
-    // ]);
-    geometry.setAttribute('position', new THREE.Float32BufferAttribute(isnverticesOrigami, 3));
-    geometry.setAttribute('normal', new THREE.Float32BufferAttribute(isnormalsOrigami, 3));
-    geometry.setAttribute('uv', new THREE.Float32BufferAttribute(isuvsOrigami, 2));
+    geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+    geometry.setAttribute('normal', new THREE.Float32BufferAttribute(normal, 3));
+    geometry.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2));
+    console.log(geometry);
 
-    // geometry.attributes.position.lerp = (geometry.attributes.position.array[1], 3, 0.25)
-    // geometry.computeBoundingBox()
     const handlePointerOver = () => {
 
         document.body.style.cursor = "pointer";
         gsap.to(geometry.attributes.position.array, {
-            0: -1, // Index 1 corresponds to the y-coordinate in a 3D position
-            1: 1,
+            45: -geometryWidth,
+            46: geometryHeight * 3,
+            47: 0,
+
+            48: geometryWidth,
+            49: geometryHeight * 3,
+            50: 0,
+
+            39: geometryWidth,
+            40: geometryHeight * 3,
+            41: 0,
+
+            15: -geometryWidth,
+            16: 0,
+            17: 0,
+            0: -geometryWidth,
+            1: 0,
+            2: 0,
+            3: geometryWidth,
+            4: 0,
+            5: 0,
             onUpdate: () => {
                 geometry.attributes.position.needsUpdate = true;
             },
             duration: 0.5,
+
         });
     };
 
     const handlePointerOut = () => {
         document.body.style.cursor = "auto";
         gsap.to(geometry.attributes.position.array, {
-            0: -1,
-            1: 1, // Change this value to your desired initial y-coordinate
-            2: 0,
+            45: -geometryWidth,
+            46: 4.5,
+            47: 1,
+
+            48: geometryWidth,
+            49: 4.5,
+            50: 1,
+
+            39: geometryWidth,
+            40: 4.5,
+            41: 1,
+
+            15: -geometryWidth,
+            16: 4,
+            17: 0.3,
+            0: -geometryWidth,
+            1: 4,
+            2: 0.3,
+            3: geometryWidth,
+            4: 4,
+            5: 0.3,
             onUpdate: () => {
                 geometry.attributes.position.needsUpdate = true;
             },
@@ -149,8 +170,8 @@ const OrigamiPlane = () => {
                 <mesh
                     ref={planeRef}
                     geometry={geometry}
-                    position={[0, 0, 0]}
-                    scale={[1, 1, 1]}
+                    position={[1, 0, 0]}
+                    scale={[0.5, 0.5, 0.5]}
                     onPointerOver={handlePointerOver}
                     onPointerOut={handlePointerOut}
                     onClick={() => {
