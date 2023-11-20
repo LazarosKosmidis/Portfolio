@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Canvas } from "@react-three/fiber";
 import { Box } from '@mui/material';
 import { OrbitControls, Stars } from '@react-three/drei'; // Import OrbitControls and Stars for camera control and background stars
@@ -14,7 +14,8 @@ function Experience() {
     const { isLetterVisible, setIsLetterVisible } = useStateContext();
     const { isCameraMoving, setIsCameraMoving } = useStateContext();
 
-
+    const [isPositionOrigami, setIsPositionOrigami] = useState([1, 0, 0]);
+    const [isRotationOrigami, setIsRotationOrigami] = useState([0, 0, 0])
     return (
         <div>
             <Canvas
@@ -47,7 +48,7 @@ function Experience() {
                 <pointLight position={[10, 10, 10]} />
 
                 {isLetterClicked && (<Origami />)}
-                {isLetterVisible && (<OrigamiPlane />)}
+                {isLetterVisible && (<OrigamiPlane positionOrigami={isPositionOrigami} rotationOrigami={isRotationOrigami} />)}
                 {isCameraMoving && (<Camera />)}
                 {/* Add camera controls */}
                 {/* <OrbitControls /> */}
