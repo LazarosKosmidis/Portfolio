@@ -49,9 +49,9 @@ function Experience() {
 
                 {isLetterClicked && (<Origami />)}
                 {isLetterVisible && (<OrigamiPlane positionOrigami={isPositionOrigami} rotationOrigami={isRotationOrigami} />)}
-                {isCameraMoving && (<Camera />)}
+                {/* {isCameraMoving && (<Camera />)} */}
                 {/* Add camera controls */}
-                {/* <OrbitControls /> */}
+                <OrbitControls />
                 <Stars />
                 {/* Add background stars */}
                 {/* HELPERS */}
