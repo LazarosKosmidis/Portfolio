@@ -263,7 +263,7 @@ const OrigamiPlane = ({ positionOrigami, rotationOrigami }) => {
 
     // Calculate initial angle for circular motion
     let angle = Math.PI;
-    const centerY = geometryHeight / 2;
+    const centerY = 1;
     const centerZ = 0;
     const angularSpeed = 0.01; // Adjust the angular speed as needed
     const maxAngle = (7.5 * Math.PI) / 4; // 180 degrees in radians
@@ -275,9 +275,9 @@ const OrigamiPlane = ({ positionOrigami, rotationOrigami }) => {
         // }
 
         // Update the position of the plane
-        // geometry.attributes.position.array[3] = x; // update x of the second vertex
-        geometry.attributes.position.array[24] = centerY + Math.cos(-angle) * 4; // update y of the second vertex
-        geometry.attributes.position.array[26] = centerZ + Math.sin(-angle) * 4; // update z of the second vertex
+        planeRef.current.position.x = centerZ; // update y of the second vertex
+        planeRef.current.position.z = (centerY) * Math.sin(angle) - (centerY) * Math.cos(angle); // update x of the second vertex
+        planeRef.current.position.y = (centerY) * Math.cos(angle) + (centerY) * Math.sin(angle); // update z of the second vertex
 
         // Increment the angle for the next frame
         angle += angularSpeed;
