@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useFrame } from "@react-three/fiber";
-import { PlaneGeometry } from "three";
+import { BoxGeometry, PlaneGeometry } from "three";
 import { useStateContext } from "../GlobalContext/StateContext.js";
 import { TextureLoader } from "three";
 
@@ -14,74 +14,84 @@ const OrigamiPlane = ({ positionOrigami, rotationOrigami }) => {
     const { isLetterClicked, setIsLetterClicked } = useStateContext();
     const { isLetterVisible, setIsLetterVisible } = useStateContext();
     const { isCameraMoving, setIsCameraMoving } = useStateContext();
+    const cubeGeometry = new BoxGeometry(0.5, 0.5, 0.5); // Adjust the size as needed
 
     const texture = useLoader(TextureLoader, "/textures/text24.png");
     console.log(texture);
     const geometry = new THREE.BufferGeometry();
-    const geometryWidth = 2
-    const geometryHeight = 4
+    const geometryWidth = 1
+    const geometryHeight = 2
     // const geometrySmallHeight = 0.3
-    const vertices = new Float32Array([
-        //1-Right-Down
-        -geometryWidth, 0.0, 0,     //(0,1,2)
-        geometryWidth, 0.0, 0,      //(3,4,5)
-        0, geometryHeight / 2, 0, //(6,7,8)
 
-        geometryWidth, 0.0, 0,
-        geometryWidth, geometryHeight, 0,
-        0, geometryHeight / 2, 0,
+    const createGeometry = () => {
+        console.log("gg");
+        const vertices = new Float32Array([
+            //1-Right-Down
+            0, 0.0, 0,     //(0,1,2)
+            geometryWidth * 2, 0.0, 0,      //(3,4,5)
+            geometryWidth, (geometryHeight / 2), 0, //(6,7,8)
 
-        0, geometryHeight / 2, 0,
-        geometryWidth, geometryHeight, 0,
-        -geometryWidth, geometryHeight, 0,
+            geometryWidth * 2, 0.0, 0,
+            geometryWidth * 2, geometryHeight, 0,
+            geometryWidth, (geometryHeight / 2), 0,
 
-        0, geometryHeight / 2, 0,
-        -geometryWidth, geometryHeight, 0,
-        -geometryWidth, 0, 0,
+            geometryWidth, (geometryHeight / 2), 0,
+            geometryWidth * 2, geometryHeight, 0,
+            0, geometryHeight, 0,
 
-    ]);
-    const verticesNumber = 4
-    const normal = []
-    const uv = []
-    for (let i = 0; i < verticesNumber; i++) {
-        normal.push(0, 0, 1)
+            geometryWidth, (geometryHeight / 2), 0,
+            0, geometryHeight, 0,
+            0, 0, 0,
+
+        ]);
+        const verticesNumber = 4
+        const normal = []
+        const uv = []
+        for (let i = 0; i < verticesNumber; i++) {
+            normal.push(0, 0, 1)
+        }
+        uv.push(0)
+        uv.push(0)
+        uv.push(1)
+        uv.push(0)
+        uv.push(1 / 2)
+        uv.push(1 / 2)
+
+        uv.push(1)
+        uv.push(0)
+        uv.push(1)
+        uv.push(1)
+        uv.push(1 / 2)
+        uv.push(1 / 2)
+
+        uv.push(1 / 2)
+        uv.push(1 / 2)
+        uv.push(1)
+        uv.push(1)
+        uv.push(0)
+        uv.push(1)
+
+        uv.push(1 / 2)
+        uv.push(1 / 2)
+        uv.push(0)
+        uv.push(1)
+        uv.push(0)
+        uv.push(0)
+
+
+
+        geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+        geometry.setAttribute('normal', new THREE.Float32BufferAttribute(normal, 3));
+        geometry.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2));
+
     }
-    uv.push(0)
-    uv.push(0)
-    uv.push(1)
-    uv.push(0)
-    uv.push(1 / 2)
-    uv.push(1 / 2)
-
-    uv.push(1)
-    uv.push(0)
-    uv.push(1)
-    uv.push(1)
-    uv.push(1 / 2)
-    uv.push(1 / 2)
-
-    uv.push(1 / 2)
-    uv.push(1 / 2)
-    uv.push(1)
-    uv.push(1)
-    uv.push(0)
-    uv.push(1)
-
-    uv.push(1 / 2)
-    uv.push(1 / 2)
-    uv.push(0)
-    uv.push(1)
-    uv.push(0)
-    uv.push(0)
 
 
+    useEffect(() => {
+        // Update the circular motion on each frame
+        createGeometry();
 
-    geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
-    geometry.setAttribute('normal', new THREE.Float32BufferAttribute(normal, 3));
-    geometry.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2));
-    console.log(geometry);
-
-
+    }, []);
 
     // const handlePointerOver = () => {
     //     // gsap.to(planeRef.current.position, {
@@ -168,10 +178,6 @@ const OrigamiPlane = ({ positionOrigami, rotationOrigami }) => {
     //     });
     // };
 
-    //Calculates the z and x of the Bottome Triangle so when the animation is completed there wont be no stretch on the texture
-    const angleOfBottomTriangle = Math.atan(0.2 / geometryHeight)
-    const zOfAngleBottomTriangle = Math.sin(angleOfBottomTriangle) * geometryHeight
-    const yOfAngleBottomTriangle = Math.cos(angleOfBottomTriangle) * geometryHeight
 
     // const handlePointerOut = () => {
     //     document.body.style.cursor = "auto";
@@ -265,30 +271,38 @@ const OrigamiPlane = ({ positionOrigami, rotationOrigami }) => {
     let angle = Math.PI;
     const centerY = 1;
     const centerZ = 0;
-    const angularSpeed = 0.01; // Adjust the angular speed as needed
-    const maxAngle = (7.5 * Math.PI) / 4; // 180 degrees in radians
+    const angularSpeed = 0.02; // Adjust the angular speed as needed
+    const maxAngle = 2 * Math.PI; // 180 degrees in radians
+
+
 
     const updateCircularMotion = () => {
-        // if (angle >= maxAngle) {
-        //     // Stop further updates when the angle exceeds or reaches 180 degrees
-        //     return;
-        // }
 
-        // Update the position of the plane
-        planeRef.current.position.x = centerZ; // update y of the second vertex
-        planeRef.current.position.z = (centerY) * Math.sin(angle) - (centerY) * Math.cos(angle); // update x of the second vertex
-        planeRef.current.position.y = (centerY) * Math.cos(angle) + (centerY) * Math.sin(angle); // update z of the second vertex
+        geometry.attributes.position.array[24] = [(1 / 2) * (1 - Math.cos(angle)) + Math.cos(angle)] * 2
+        geometry.attributes.position.array[25] = (1 / 2) * (1 - Math.cos(angle)) * 2
+        geometry.attributes.position.array[26] = -[(1 / Math.sqrt(2) * Math.sin(angle))]
+
+        geometry.attributes.position.array[30] = [(1 / 2) * (1 - Math.cos(angle)) + Math.cos(angle)] * 2
+        geometry.attributes.position.array[31] = (1 / 2) * (1 - Math.cos(angle)) * 2
+        geometry.attributes.position.array[32] = -[(1 / Math.sqrt(2) * Math.sin(angle))]
+
 
         // Increment the angle for the next frame
-        angle += angularSpeed;
 
         // Mark the buffer as needing an update
         geometry.attributes.position.needsUpdate = true;
     };
 
     useFrame(() => {
-        // Update the circular motion on each frame
-        updateCircularMotion();
+        // Update the circular motion on each frame     
+        if (angle < maxAngle) {
+            // Stop further updates when the angle exceeds or reaches 180 degrees
+            updateCircularMotion();
+            angle += angularSpeed;
+            console.log("gg");
+        }
+        console.log("ff");
+
     });
 
     return (
@@ -298,7 +312,7 @@ const OrigamiPlane = ({ positionOrigami, rotationOrigami }) => {
                 ref={planeRef}
                 geometry={geometry}
                 position={[0, 0, 0]}
-                scale={[0.2, 0.2, 0.2]}
+                scale={[1, 1, 1]}
                 rotation={rotationOrigami}
                 // onPointerOver={handlePointerOver}
                 // onPointerOut={handlePointerOut}
@@ -314,11 +328,17 @@ const OrigamiPlane = ({ positionOrigami, rotationOrigami }) => {
             >
                 <meshBasicMaterial
                     side={2}
-                    map={texture}
+                    // map={texture}
                     transparent={true}
-                // wireframe={true}
+                    wireframe={true}
                 />
 
+            </mesh>
+            <mesh
+                position={[1, 1, -1]} // Adjust the position of the cube
+                geometry={cubeGeometry}
+            >
+                <meshBasicMaterial color="red" /> {/* Adjust the material as needed */}
             </mesh>
             {/* </Float> */}
 
