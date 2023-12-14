@@ -14,17 +14,23 @@ const OrigamiPlane = ({ positionOrigami, rotationOrigami }) => {
     const { isLetterClicked, setIsLetterClicked } = useStateContext();
     const { isLetterVisible, setIsLetterVisible } = useStateContext();
     const { isCameraMoving, setIsCameraMoving } = useStateContext();
-    const cubeGeometry = new BoxGeometry(0.5, 0.5, 0.5); // Adjust the size as needed
+    const [isPosition, setPosition] = useState([0, 0, 0])
+    const [doAnim1, setDoAnim1] = useState(false)
+    const [doAnim2, setDoAnim2] = useState(false)
+    const [doCreate, setDoCreate] = useState(true)
+    const [geometry, setGeometry] = useState(new THREE.BufferGeometry());
+    const [doCreate1, setDoCreate1] = useState(false)
+
+
 
     const texture = useLoader(TextureLoader, "/textures/text24.png");
-    console.log(texture);
-    const geometry = new THREE.BufferGeometry();
+
     const geometryWidth = 1
     const geometryHeight = 2
     // const geometrySmallHeight = 0.3
 
     const createGeometry = () => {
-        console.log("gg");
+        const geometry = new THREE.BufferGeometry();
         const vertices = new Float32Array([
             //1-Right-Down
             0, 0.0, 0,     //(0,1,2)
@@ -79,19 +85,43 @@ const OrigamiPlane = ({ positionOrigami, rotationOrigami }) => {
         uv.push(0)
 
 
-
         geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
         geometry.setAttribute('normal', new THREE.Float32BufferAttribute(normal, 3));
         geometry.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2));
-
+        setGeometry(geometry)
     }
+    const createNewGeometry = (old_Geometry, x_move, y_move) => {
+        console.log("old_Geometry", old_Geometry);
 
+        // old_Geometry.attributes.position
+        console.log(geometry);
+        for (let i = 0; i < 36; i += 3) {
+            console.log(i);
+            old_Geometry.attributes.position.array[i] += x_move
+        }
+        for (let i = 1; i < 36; i += 3) {
+            console.log(i);
+            old_Geometry.attributes.position.array[i] += y_move
+        }
+        setGeometry(old_Geometry)
+    }
 
     useEffect(() => {
         // Update the circular motion on each frame
         createGeometry();
+        setDoAnim1(true);
 
     }, []);
+
+    useEffect(() => {
+        // Update the circular motion on each frame
+        if (doCreate1 === false) {
+            console.log("gg");
+            return;
+        }
+        createNewGeometry(geometry, -1, -1);
+        // setDoAnim2(true)
+    }, [doCreate1,]);
 
     // const handlePointerOver = () => {
     //     // gsap.to(planeRef.current.position, {
@@ -275,34 +305,74 @@ const OrigamiPlane = ({ positionOrigami, rotationOrigami }) => {
     const maxAngle = 2 * Math.PI; // 180 degrees in radians
 
 
+    const updateCircularMotion = (U_Vector, Rotate_point, vertices, vertex_coordinates) => {
 
-    const updateCircularMotion = () => {
+        if (vertices === 1) {
 
-        geometry.attributes.position.array[24] = [(1 / 2) * (1 - Math.cos(angle)) + Math.cos(angle)] * 2
-        geometry.attributes.position.array[25] = (1 / 2) * (1 - Math.cos(angle)) * 2
-        geometry.attributes.position.array[26] = -[(1 / Math.sqrt(2) * Math.sin(angle))]
+            geometry.attributes.position.array[vertex_coordinates[0]] = ([U_Vector.normalize().x * U_Vector.normalize().x * (1 - Math.cos(angle)) + Math.cos(angle)] * Rotate_point.x) + ([U_Vector.normalize().z * U_Vector.normalize().x * (1 - Math.cos(angle)) - U_Vector.normalize().z * Math.sin(angle)] * Rotate_point.y) + ([U_Vector.normalize().x * U_Vector.normalize().z * (1 - Math.cos(angle)) + U_Vector.normalize().y * Math.sin(angle)] * Rotate_point.z)
+            geometry.attributes.position.array[vertex_coordinates[1]] = ([U_Vector.normalize().y * U_Vector.normalize().x * (1 - Math.cos(angle)) + U_Vector.normalize().z * Math.sin(angle)] * Rotate_point.x) + ([U_Vector.normalize().z * U_Vector.normalize().x * (1 - Math.cos(angle)) + Math.cos(angle)] * Rotate_point.y) + ([U_Vector.normalize().y * U_Vector.normalize().z * (1 - Math.cos(angle)) - U_Vector.normalize().x * Math.sin(angle)] * Rotate_point.z)
+            geometry.attributes.position.array[vertex_coordinates[2]] = -([U_Vector.normalize().z * U_Vector.normalize().x * (1 - Math.cos(angle)) + U_Vector.normalize().y * Math.sin(angle)] * Rotate_point.x) + ([U_Vector.normalize().y * U_Vector.normalize().z * (1 - Math.cos(angle)) + U_Vector.normalize().x * Math.sin(angle)] * Rotate_point.y) + ([U_Vector.normalize().z * U_Vector.normalize().z * (1 - Math.cos(angle)) + Math.cos(angle)] * Rotate_point.z)
 
-        geometry.attributes.position.array[30] = [(1 / 2) * (1 - Math.cos(angle)) + Math.cos(angle)] * 2
-        geometry.attributes.position.array[31] = (1 / 2) * (1 - Math.cos(angle)) * 2
-        geometry.attributes.position.array[32] = -[(1 / Math.sqrt(2) * Math.sin(angle))]
+        }
+        else if (vertices === 2) {
 
+            geometry.attributes.position.array[vertex_coordinates[0]] = ([U_Vector.normalize().x * U_Vector.normalize().x * (1 - Math.cos(angle)) + Math.cos(angle)] * Rotate_point.x) + ([U_Vector.normalize().z * U_Vector.normalize().x * (1 - Math.cos(angle)) - U_Vector.normalize().z * Math.sin(angle)] * Rotate_point.y) + ([U_Vector.normalize().x * U_Vector.normalize().z * (1 - Math.cos(angle)) + U_Vector.normalize().y * Math.sin(angle)] * Rotate_point.z)
+            geometry.attributes.position.array[vertex_coordinates[1]] = ([U_Vector.normalize().y * U_Vector.normalize().x * (1 - Math.cos(angle)) + U_Vector.normalize().z * Math.sin(angle)] * Rotate_point.x) + ([U_Vector.normalize().z * U_Vector.normalize().x * (1 - Math.cos(angle)) + Math.cos(angle)] * Rotate_point.y) + ([U_Vector.normalize().y * U_Vector.normalize().z * (1 - Math.cos(angle)) - U_Vector.normalize().x * Math.sin(angle)] * Rotate_point.z)
+            geometry.attributes.position.array[vertex_coordinates[2]] = -([U_Vector.normalize().z * U_Vector.normalize().x * (1 - Math.cos(angle)) + U_Vector.normalize().y * Math.sin(angle)] * Rotate_point.x) + ([U_Vector.normalize().y * U_Vector.normalize().z * (1 - Math.cos(angle)) + U_Vector.normalize().x * Math.sin(angle)] * Rotate_point.y) + ([U_Vector.normalize().z * U_Vector.normalize().z * (1 - Math.cos(angle)) + Math.cos(angle)] * Rotate_point.z)
 
-        // Increment the angle for the next frame
+            geometry.attributes.position.array[vertex_coordinates[3]] = ([U_Vector.normalize().x * U_Vector.normalize().x * (1 - Math.cos(angle)) + Math.cos(angle)] * Rotate_point.x) + ([U_Vector.normalize().z * U_Vector.normalize().x * (1 - Math.cos(angle)) - U_Vector.normalize().z * Math.sin(angle)] * Rotate_point.y) + ([U_Vector.normalize().x * U_Vector.normalize().z * (1 - Math.cos(angle)) + U_Vector.normalize().y * Math.sin(angle)] * Rotate_point.z)
+            geometry.attributes.position.array[vertex_coordinates[4]] = ([U_Vector.normalize().y * U_Vector.normalize().x * (1 - Math.cos(angle)) + U_Vector.normalize().z * Math.sin(angle)] * Rotate_point.x) + ([U_Vector.normalize().z * U_Vector.normalize().x * (1 - Math.cos(angle)) + Math.cos(angle)] * Rotate_point.y) + ([U_Vector.normalize().y * U_Vector.normalize().z * (1 - Math.cos(angle)) - U_Vector.normalize().x * Math.sin(angle)] * Rotate_point.z)
+            geometry.attributes.position.array[vertex_coordinates[5]] = -([U_Vector.normalize().z * U_Vector.normalize().x * (1 - Math.cos(angle)) + U_Vector.normalize().y * Math.sin(angle)] * Rotate_point.x) + ([U_Vector.normalize().y * U_Vector.normalize().z * (1 - Math.cos(angle)) + U_Vector.normalize().x * Math.sin(angle)] * Rotate_point.y) + ([U_Vector.normalize().z * U_Vector.normalize().z * (1 - Math.cos(angle)) + Math.cos(angle)] * Rotate_point.z)
 
+        }
+        else if (vertices === 3) {
+
+            geometry.attributes.position.array[vertex_coordinates[0]] = ([U_Vector.normalize().x * U_Vector.normalize().x * (1 - Math.cos(angle)) + Math.cos(angle)] * Rotate_point.x) + ([U_Vector.normalize().z * U_Vector.normalize().x * (1 - Math.cos(angle)) - U_Vector.normalize().z * Math.sin(angle)] * Rotate_point.y) + ([U_Vector.normalize().x * U_Vector.normalize().z * (1 - Math.cos(angle)) + U_Vector.normalize().y * Math.sin(angle)] * Rotate_point.z)
+            geometry.attributes.position.array[vertex_coordinates[1]] = ([U_Vector.normalize().y * U_Vector.normalize().x * (1 - Math.cos(angle)) + U_Vector.normalize().z * Math.sin(angle)] * Rotate_point.x) + ([U_Vector.normalize().z * U_Vector.normalize().x * (1 - Math.cos(angle)) + Math.cos(angle)] * Rotate_point.y) + ([U_Vector.normalize().y * U_Vector.normalize().z * (1 - Math.cos(angle)) - U_Vector.normalize().x * Math.sin(angle)] * Rotate_point.z)
+            geometry.attributes.position.array[vertex_coordinates[2]] = -([U_Vector.normalize().z * U_Vector.normalize().x * (1 - Math.cos(angle)) + U_Vector.normalize().y * Math.sin(angle)] * Rotate_point.x) + ([U_Vector.normalize().y * U_Vector.normalize().z * (1 - Math.cos(angle)) + U_Vector.normalize().x * Math.sin(angle)] * Rotate_point.y) + ([U_Vector.normalize().z * U_Vector.normalize().z * (1 - Math.cos(angle)) + Math.cos(angle)] * Rotate_point.z)
+
+            geometry.attributes.position.array[vertex_coordinates[3]] = ([U_Vector.normalize().x * U_Vector.normalize().x * (1 - Math.cos(angle)) + Math.cos(angle)] * Rotate_point.x) + ([U_Vector.normalize().z * U_Vector.normalize().x * (1 - Math.cos(angle)) - U_Vector.normalize().z * Math.sin(angle)] * Rotate_point.y) + ([U_Vector.normalize().x * U_Vector.normalize().z * (1 - Math.cos(angle)) + U_Vector.normalize().y * Math.sin(angle)] * Rotate_point.z)
+            geometry.attributes.position.array[vertex_coordinates[4]] = ([U_Vector.normalize().y * U_Vector.normalize().x * (1 - Math.cos(angle)) + U_Vector.normalize().z * Math.sin(angle)] * Rotate_point.x) + ([U_Vector.normalize().z * U_Vector.normalize().x * (1 - Math.cos(angle)) + Math.cos(angle)] * Rotate_point.y) + ([U_Vector.normalize().y * U_Vector.normalize().z * (1 - Math.cos(angle)) - U_Vector.normalize().x * Math.sin(angle)] * Rotate_point.z)
+            geometry.attributes.position.array[vertex_coordinates[5]] = -([U_Vector.normalize().z * U_Vector.normalize().x * (1 - Math.cos(angle)) + U_Vector.normalize().y * Math.sin(angle)] * Rotate_point.x) + ([U_Vector.normalize().y * U_Vector.normalize().z * (1 - Math.cos(angle)) + U_Vector.normalize().x * Math.sin(angle)] * Rotate_point.y) + ([U_Vector.normalize().z * U_Vector.normalize().z * (1 - Math.cos(angle)) + Math.cos(angle)] * Rotate_point.z)
+
+            geometry.attributes.position.array[vertex_coordinates[6]] = ([U_Vector.normalize().x * U_Vector.normalize().x * (1 - Math.cos(angle)) + Math.cos(angle)] * Rotate_point.x) + ([U_Vector.normalize().z * U_Vector.normalize().x * (1 - Math.cos(angle)) - U_Vector.normalize().z * Math.sin(angle)] * Rotate_point.y) + ([U_Vector.normalize().x * U_Vector.normalize().z * (1 - Math.cos(angle)) + U_Vector.normalize().y * Math.sin(angle)] * Rotate_point.z)
+            geometry.attributes.position.array[vertex_coordinates[7]] = ([U_Vector.normalize().y * U_Vector.normalize().x * (1 - Math.cos(angle)) + U_Vector.normalize().z * Math.sin(angle)] * Rotate_point.x) + ([U_Vector.normalize().z * U_Vector.normalize().x * (1 - Math.cos(angle)) + Math.cos(angle)] * Rotate_point.y) + ([U_Vector.normalize().y * U_Vector.normalize().z * (1 - Math.cos(angle)) - U_Vector.normalize().x * Math.sin(angle)] * Rotate_point.z)
+            geometry.attributes.position.array[vertex_coordinates[8]] = -([U_Vector.normalize().z * U_Vector.normalize().x * (1 - Math.cos(angle)) + U_Vector.normalize().y * Math.sin(angle)] * Rotate_point.x) + ([U_Vector.normalize().y * U_Vector.normalize().z * (1 - Math.cos(angle)) + U_Vector.normalize().x * Math.sin(angle)] * Rotate_point.y) + ([U_Vector.normalize().z * U_Vector.normalize().z * (1 - Math.cos(angle)) + Math.cos(angle)] * Rotate_point.z)
+
+        }
         // Mark the buffer as needing an update
         geometry.attributes.position.needsUpdate = true;
     };
 
     useFrame(() => {
-        // Update the circular motion on each frame     
+        // Update the circular motion on each frame 
+        if (doAnim1 == false) {
+            return;
+        }
         if (angle < maxAngle) {
             // Stop further updates when the angle exceeds or reaches 180 degrees
-            updateCircularMotion();
+            updateCircularMotion(new THREE.Vector3(2, 2, 0), new THREE.Vector3(2, 0, 0), 2, [24, 25, 26, 30, 31, 32]);
             angle += angularSpeed;
-            console.log("gg");
         }
-        console.log("ff");
+        else {
+            setDoAnim1(false);
+            setDoAnim2(true);
+            setDoCreate1(true);
+        }
+    });
 
+    useFrame(() => {
+        // Update the circular motion on each frame 
+
+        if (doAnim2 == false) {
+            console.log("doAnim2 == false");
+            return;
+        }
+
+        else {
+            setGeometry(geometry)
+            console.log(geometry);
+        }
     });
 
     return (
@@ -311,7 +381,7 @@ const OrigamiPlane = ({ positionOrigami, rotationOrigami }) => {
             <mesh
                 ref={planeRef}
                 geometry={geometry}
-                position={[0, 0, 0]}
+                position={isPosition}
                 scale={[1, 1, 1]}
                 rotation={rotationOrigami}
                 // onPointerOver={handlePointerOver}
@@ -334,13 +404,12 @@ const OrigamiPlane = ({ positionOrigami, rotationOrigami }) => {
                 />
 
             </mesh>
-            <mesh
+            {/* <mesh
                 position={[1, 1, -1]} // Adjust the position of the cube
                 geometry={cubeGeometry}
             >
-                <meshBasicMaterial color="red" /> {/* Adjust the material as needed */}
-            </mesh>
-            {/* </Float> */}
+                <meshBasicMaterial color="red" /> Adjust the material as needed */}
+            {/* </mesh> */}
 
         </group >
     );
