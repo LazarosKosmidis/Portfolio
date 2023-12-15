@@ -103,7 +103,10 @@ const OrigamiPlane = ({ positionOrigami, rotationOrigami }) => {
             console.log(i);
             old_Geometry.attributes.position.array[i] += y_move
         }
+        geometry.attributes.position.needsUpdate = true;
+
         setGeometry(old_Geometry)
+        setPosition([1, 1, 0])
     }
 
     useEffect(() => {
