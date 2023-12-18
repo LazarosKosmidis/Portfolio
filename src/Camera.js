@@ -10,7 +10,7 @@ const Camera = () => {
     const dampingFactor = 0.05;
     const minY = -10;
     const maxY = 10;
-    const wheelSensitivity = 0.01;
+    const wheelSensitivity = 0.0015;
 
     // Set up a target position for smooth camera movement
     const targetPosition = new THREE.Vector3();

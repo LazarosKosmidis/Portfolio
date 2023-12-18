@@ -14,7 +14,11 @@ function Experience() {
     const { isLetterVisible, setIsLetterVisible } = useStateContext();
     const { isCameraMoving, setIsCameraMoving } = useStateContext();
 
-    const [isPositionOrigami, setIsPositionOrigami] = useState([1, 0, 0]);
+    const [isPositionOrigami, setIsPositionOrigami] = useState([0, 1.5, 0]);
+    const [isPositionOrigami1, setIsPositionOrigami1] = useState([-2, 0, 0]);
+    const [isPositionOrigami2, setIsPositionOrigami2] = useState([0, -1.5, 0]);
+
+
     const [isRotationOrigami, setIsRotationOrigami] = useState([0, 0, 0])
     return (
         <div>
@@ -49,6 +53,10 @@ function Experience() {
 
                 {isLetterClicked && (<Origami />)}
                 {isLetterVisible && (<OrigamiPlane positionOrigami={isPositionOrigami} rotationOrigami={isRotationOrigami} />)}
+                {isLetterVisible && (<OrigamiPlane positionOrigami={isPositionOrigami1} rotationOrigami={isRotationOrigami} />)}
+
+                {isLetterVisible && (<OrigamiPlane positionOrigami={isPositionOrigami2} rotationOrigami={isRotationOrigami} />)}
+
                 {/* {isCameraMoving && (<Camera />)} */}
                 {/* Add camera controls */}
                 <OrbitControls />
@@ -56,7 +64,7 @@ function Experience() {
                 {/* Add background stars */}
                 {/* HELPERS */}
                 <axesHelper args={[50]} position={[0, 0, 0]} />
-                {/* <Stats /> */}
+                <Stats />
             </Canvas>
             <Menu />
         </div>
