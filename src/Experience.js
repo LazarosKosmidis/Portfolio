@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Canvas } from "@react-three/fiber";
 import { Box } from '@mui/material';
-import { OrbitControls, Stars } from '@react-three/drei'; // Import OrbitControls and Stars for camera control and background stars
+import { OrbitControls, Sparkles, Stars, Sky } from '@react-three/drei'; // Import OrbitControls and Stars for camera control and background stars
 import * as THREE from "three";
 import Origami from "./Origami";
 import OrigamiPlane from "./OrigamiLetter/OrigamiPlane"
@@ -14,7 +14,7 @@ function Experience() {
     const { isLetterVisible, setIsLetterVisible } = useStateContext();
     const { isCameraMoving, setIsCameraMoving } = useStateContext();
 
-    const [isPositionOrigami, setIsPositionOrigami] = useState([0, 1.5, 0]);
+    const [isPositionOrigami, setIsPositionOrigami] = useState([0, 0, 0]);
     const [isPositionOrigami1, setIsPositionOrigami1] = useState([-2, 0, 0]);
     const [isPositionOrigami2, setIsPositionOrigami2] = useState([0, -1.5, 0]);
 
@@ -53,14 +53,26 @@ function Experience() {
 
                 {isLetterClicked && (<Origami />)}
                 {isLetterVisible && (<OrigamiPlane positionOrigami={isPositionOrigami} rotationOrigami={isRotationOrigami} />)}
-                {isLetterVisible && (<OrigamiPlane positionOrigami={isPositionOrigami1} rotationOrigami={isRotationOrigami} />)}
+                {/* {isLetterVisible && (<OrigamiPlane positionOrigami={isPositionOrigami1} rotationOrigami={isRotationOrigami} />)}
 
-                {isLetterVisible && (<OrigamiPlane positionOrigami={isPositionOrigami2} rotationOrigami={isRotationOrigami} />)}
+                {isLetterVisible && (<OrigamiPlane positionOrigami={isPositionOrigami2} rotationOrigami={isRotationOrigami} />)} */}
 
                 {/* {isCameraMoving && (<Camera />)} */}
                 {/* Add camera controls */}
                 <OrbitControls />
-                <Stars />
+                {/* <Sky distance={450000} sunPosition={[10, -0.1, 0]} inclination={0} azimuth={0.5} /> */}
+                {/* < Stars
+                    saturation={0}
+                    factor={4}
+                /> */}
+                <Sparkles
+                    count={10000}
+                    color={"orange"}
+                    speed={1}
+                    scale={[40, 40, 10]}
+                    size={3}
+                    noise={0.5}
+                />
                 {/* Add background stars */}
                 {/* HELPERS */}
                 <axesHelper args={[50]} position={[0, 0, 0]} />

@@ -38,17 +38,17 @@ const OrigamiPlane = ({ positionOrigami, rotationOrigami }) => {
             geometryWidth * 2, 0.0, 0,      //(3,4,5)
             geometryWidth, (geometryHeight / 2), 0, //(6,7,8)
 
-            geometryWidth * 2, 0.0, 0,
-            geometryWidth * 2, geometryHeight, 0,
-            geometryWidth, (geometryHeight / 2), 0,
+            geometryWidth * 2, 0.0, 0,//(9,10,11)
+            geometryWidth * 2, geometryHeight, 0,//(12,13,14)
+            geometryWidth, (geometryHeight / 2), 0,//(15,16,17)
 
-            geometryWidth, (geometryHeight / 2), 0,
-            geometryWidth * 2, geometryHeight, 0,
-            0, geometryHeight, 0,
+            geometryWidth, (geometryHeight / 2), 0,//(18,19,20)
+            geometryWidth * 2, geometryHeight, 0,//(21,22,23)
+            0, geometryHeight, 0,//(24,25,26)
 
-            geometryWidth, (geometryHeight / 2), 0,
-            0, geometryHeight, 0,
-            0, 0, 0,
+            geometryWidth, (geometryHeight / 2), 0,//(27,28,29)
+            0, geometryHeight, 0,//(30,31,32)
+            0, 0, 0,//(33,34,35)
 
         ]);
         const verticesNumber = 4
@@ -227,86 +227,77 @@ const OrigamiPlane = ({ positionOrigami, rotationOrigami }) => {
         geometry.attributes.position.needsUpdate = true;
     };
 
-    useFrame((state, delta) => {
-        // Update the circular motion on each frame 
-        if (doAnim1 == false) {
-            return;
-        }
-        if (angle < maxAngle) {
-            // Stop further updates when the angle exceeds or reaches 180 degrees
-            updateCircularMotion(new THREE.Vector3(2, 2, 0), new THREE.Vector3(2, 0, 0), 2, [24, 25, 26, 30, 31, 32]);
-            angle += delta * 2;
+    // useFrame((state, delta) => {
+    //     // Update the circular motion on each frame 
 
-        }
-        else {
-            setDoAnim1(false);
-            setDoAnim2(true);
-            setStartingAngle(0)
-            setDoCreate1(true);
+    //     if (doAnim1) {
+    //         if (angle <= maxAngle) {
+    //             // Stop further updates when the angle exceeds or reaches 180 degrees
+    //             updateCircularMotion(new THREE.Vector3(2, 2, 0), new THREE.Vector3(2, 0, 0), 2, [24, 25, 26, 30, 31, 32]);
+    //             angle += delta * 5;
+    //         } else {
+    //             setDoAnim1(false);
+    //             setDoAnim2(true);
+    //             setStartingAngle(0);
+    //             setDoCreate1(true);
+    //         }
+    //     } else if (doAnim2) {
+    //         console.log(angle);
+    //         if (angle <= Math.PI) {
+    //             // Stop further updates when the angle exceeds or reaches 180 degrees
+    //             updateCircularMotion(new THREE.Vector3(1, -1, 0), new THREE.Vector3(1, 1, 0), 2, [12, 13, 14, 21, 22, 23]);
+    //             angle += delta * 5;
+    //         } else {
+    //             setGeometry(geometry);
+    //         }
+    //     }
+    // });
 
-        }
-    });
-
-    useFrame((state, delta) => {
-        // Update the circular motion on each frame 
-
-        if (doAnim2 == false) {
-            return;
-        }
-        if (angle < Math.PI) {
-            // Stop further updates when the angle exceeds or reaches 180 degrees
-            updateCircularMotion(new THREE.Vector3(1, -1, 0), new THREE.Vector3(1, 1, 0), 2, [12, 13, 14, 21, 22, 23]);
-            angle += delta * 2;
-        }
-        else {
-            setGeometry(geometry)
-        }
-    });
 
     return (
         <group>
-            {/* <Float> */}
-            <mesh
-                ref={planeRef}
-                geometry={geometry}
-                position={isPosition}
-                scale={[1, 1, 1]}
-                rotation={rotationOrigami}
-            // Add your click handler
-
-            >
-                <meshBasicMaterial
-                    side={2}
-                    map={texture}
-                    transparent={true}
-                // wireframe={true}
-                />
+            <Float>
                 <mesh
-                    ref={sphereCollider}
-                    scale={[1, 0.8, 1]}
-                    position={shpereColliderPos}
-                    onPointerOver={handlePointerOver}
-                    onPointerOut={handlePointerOut}
-                    onClick={() => {
+                    ref={planeRef}
+                    geometry={geometry}
+                    position={isPosition}
+                    scale={[1, 1, 1]}
+                    rotation={rotationOrigami}
+                // Add your click handler
 
-                        handlePointerOut();
-                        setIsLetterClicked((prev) => !prev);
-                        setIsLetterVisible((prev) => !prev);
-                        setIsCameraMoving(false)
-                    }}
-                    pointerEvents="auto" // Enable pointer events
                 >
-                    <sphereGeometry args={[1, 32, 32]} />
                     <meshBasicMaterial
-                        wireframe={true}
+                        side={2}
+                        // map={texture}
                         transparent={true}
-                        opacity={0}
-                        visible={false}
+                        wireframe={true}
                     />
-                </mesh>
-            </mesh>
+                    <mesh
+                        ref={sphereCollider}
+                        scale={[1, 0.8, 1]}
+                        position={shpereColliderPos}
+                        onPointerOver={handlePointerOver}
+                        onPointerOut={handlePointerOut}
+                        onClick={() => {
 
-            {/* </Float> */}
+                            handlePointerOut();
+                            setIsLetterClicked((prev) => !prev);
+                            setIsLetterVisible((prev) => !prev);
+                            setIsCameraMoving(false)
+                        }}
+                        pointerEvents="auto" // Enable pointer events
+                    >
+                        <sphereGeometry args={[1, 32, 32]} />
+                        <meshBasicMaterial
+                            wireframe={true}
+                            transparent={true}
+                            opacity={0}
+                            visible={false}
+                        />
+                    </mesh>
+                </mesh>
+
+            </Float>
         </group >
     );
 };

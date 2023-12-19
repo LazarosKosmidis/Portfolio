@@ -14,8 +14,8 @@ const Origami = ({ positionOrigami }) => {
     const group = useRef();
     const [isMoving, setisMoving] = useState(true)
     const texture = useLoader(TextureLoader, "/textures/05_anahanum.jpg");
-    texture.repeat.set(0.5, 0.3)
-    texture.offset.set(0, 0.03);
+    texture.repeat.set(0.5, 0.286)
+    texture.offset.set(0, 0);
     const { isLetterVisible, setIsLetterVisible } = useStateContext();
 
     // State to hold the rotation angle in degrees
@@ -105,7 +105,7 @@ const Origami = ({ positionOrigami }) => {
         <group ref={group} position={[-3, 0.5, 0]}>
             <mesh
                 geometry={geometry}
-                position={[-1, -1.5, 0]}
+                position={[-1, -1.3, 0.8]}
                 onPointerOver={() => setisMoving(false)}
                 onPointerLeave={() => setisMoving(true)}
             >
