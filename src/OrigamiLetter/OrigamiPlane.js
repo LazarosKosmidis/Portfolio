@@ -15,6 +15,8 @@ const OrigamiPlane = ({ positionOrigami, rotationOrigami }) => {
     const { isLetterClicked, setIsLetterClicked } = useStateContext();
     const { isLetterVisible, setIsLetterVisible } = useStateContext();
     const { isCameraMoving, setIsCameraMoving } = useStateContext();
+    const [isOrigamiClicked, setIsOrigamiClicked] = useState(false);
+
     const [isPosition, setPosition] = useState(positionOrigami)
     const [doAnim1, setDoAnim1] = useState(false)
     const [doAnim2, setDoAnim2] = useState(false)
@@ -31,7 +33,7 @@ const OrigamiPlane = ({ positionOrigami, rotationOrigami }) => {
     // const geometrySmallHeight = 0.3
 
     const createGeometry = () => {
-        const geometry = new THREE.BufferGeometry();
+        const geometry_tmp = new THREE.BufferGeometry();
         const vertices = new Float32Array([
             //1-Right-Down
             0, 0.0, 0,     //(0,1,2)
@@ -85,11 +87,37 @@ const OrigamiPlane = ({ positionOrigami, rotationOrigami }) => {
         uv.push(0)
         uv.push(0)
 
+        geometry_tmp.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+        geometry_tmp.setAttribute('normal', new THREE.Float32BufferAttribute(normal, 3));
+        geometry_tmp.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2));
 
-        geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
-        geometry.setAttribute('normal', new THREE.Float32BufferAttribute(normal, 3));
-        geometry.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2));
-        setGeometry(geometry)
+        geometry_tmp.attributes.position.array[24] = 2
+        geometry_tmp.attributes.position.array[25] = 0
+        geometry_tmp.attributes.position.array[26] = 0.1
+
+        geometry_tmp.attributes.position.array[30] = 2
+        geometry_tmp.attributes.position.array[31] = 0
+        geometry_tmp.attributes.position.array[32] = 0.1
+
+        geometry_tmp.attributes.position.array[21] = 0
+        geometry_tmp.attributes.position.array[22] = 0
+        geometry_tmp.attributes.position.array[23] = 0.1
+
+        geometry_tmp.attributes.position.array[12] = 0
+        geometry_tmp.attributes.position.array[13] = 0
+
+        for (let i = 0; i < 36; i += 3) {
+            geometry_tmp.attributes.position.array[i] -= 1
+        }
+        for (let i = 1; i < 36; i += 3) {
+            geometry_tmp.attributes.position.array[i] -= 1
+        }
+
+
+        setPosition([positionOrigami[0] + 1, positionOrigami[1] + 1, planeRef.current.position.z])
+        setSphereColliderPos([0, -0.7, 0]) // -1 on x and -1 on y
+
+        setGeometry(geometry_tmp)
     }
     const createNewGeometry = (old_Geometry, x_move, y_move) => {
 
@@ -104,37 +132,41 @@ const OrigamiPlane = ({ positionOrigami, rotationOrigami }) => {
 
         setGeometry(old_Geometry)
 
-        console.log(planeRef.current.position);
-        setPosition([positionOrigami[0] + 1, positionOrigami[1] + 1, planeRef.current.position.z])
-        setSphereColliderPos([0, -0.7, 0]) // -1 on x and -1 on y
+        setPosition([positionOrigami[0], positionOrigami[1], planeRef.current.position.z])
+        setSphereColliderPos([1, 0.3, 0]) // -1 on x and -1 on y
 
     }
 
     useEffect(() => {
         // Update the circular motion on each frame
-        console.log(planeRef.current.position);
-
         createGeometry();
+        if (!isOrigamiClicked) return;
+
         setDoAnim1(true);
+
         setStartingAngle(Math.PI)
 
-    }, []);
+    }, [isOrigamiClicked]);
 
     useEffect(() => {
         // Update the circular motion on each frame
         if (doCreate1 === false) {
             return;
         }
-        createNewGeometry(geometry, -1, -1);
+        createNewGeometry(geometry, 1, 1);
         // setDoAnim2(true)
     }, [doCreate1,]);
 
     const handlePointerOver = () => {
 
-        gsap.to(planeRef.current.position, {
-            z: planeRef.current.position.z + 0.5,
-            duration: 0.5,
-        })
+        if (!isOrigamiClicked) {
+            gsap.to(planeRef.current.position, {
+                z: planeRef.current.position.z + 0.5,
+                duration: 0.5,
+            })
+        }
+
+
 
         gsap.to(planeRef.current.rotation, {
             x: 0,
@@ -143,25 +175,20 @@ const OrigamiPlane = ({ positionOrigami, rotationOrigami }) => {
             duration: 0.5,
         })
 
-        // gsap.to(planeRef.current.position, {
-        //     x: 0,
-        //     y: 0,
-        //     z: 1,
-        //     duration: 0.5,
-        // })
-
-        console.log("gg");
         document.body.style.cursor = "pointer";
     };
 
-
     const handlePointerOut = () => {
         document.body.style.cursor = "auto";
+        console.log(isOrigamiClicked);
+        if (!isOrigamiClicked) {
+            console.log("gg");
+            gsap.to(planeRef.current.position, {
+                z: planeRef.current.position.z - 0.5,
+                duration: 0.5,
+            })
+        }
 
-        gsap.to(planeRef.current.position, {
-            z: planeRef.current.position.z - 0.5,
-            duration: 0.5,
-        })
 
         gsap.to(planeRef.current.rotation, {
             x: rotationOrigami[0],
@@ -180,11 +207,17 @@ const OrigamiPlane = ({ positionOrigami, rotationOrigami }) => {
 
     // Calculate initial angle for circular motion
     let angle = startingAngle
-    const centerY = 1;
-    const centerZ = 0;
     const angularSpeed = 0.02; // Adjust the angular speed as needed
     const maxAngle = 2 * Math.PI; // 180 degrees in radians
 
+    const moveOrigamiToCamera = (() => {
+        if (isOrigamiClicked) {
+            gsap.to(planeRef.current.position, {
+                z: planeRef.current.position.z + 8.5,
+                duration: 8.5,
+            })
+        }
+    })
 
     const updateCircularMotion = (U_Vector, Rotate_point, vertices, vertex_coordinates) => {
         const U_Vec_Norm = U_Vector.normalize()
@@ -227,31 +260,32 @@ const OrigamiPlane = ({ positionOrigami, rotationOrigami }) => {
         geometry.attributes.position.needsUpdate = true;
     };
 
-    // useFrame((state, delta) => {
-    //     // Update the circular motion on each frame 
+    useFrame((state, delta) => {
+        // Update the circular motion on each frame 
 
-    //     if (doAnim1) {
-    //         if (angle <= maxAngle) {
-    //             // Stop further updates when the angle exceeds or reaches 180 degrees
-    //             updateCircularMotion(new THREE.Vector3(2, 2, 0), new THREE.Vector3(2, 0, 0), 2, [24, 25, 26, 30, 31, 32]);
-    //             angle += delta * 5;
-    //         } else {
-    //             setDoAnim1(false);
-    //             setDoAnim2(true);
-    //             setStartingAngle(0);
-    //             setDoCreate1(true);
-    //         }
-    //     } else if (doAnim2) {
-    //         console.log(angle);
-    //         if (angle <= Math.PI) {
-    //             // Stop further updates when the angle exceeds or reaches 180 degrees
-    //             updateCircularMotion(new THREE.Vector3(1, -1, 0), new THREE.Vector3(1, 1, 0), 2, [12, 13, 14, 21, 22, 23]);
-    //             angle += delta * 5;
-    //         } else {
-    //             setGeometry(geometry);
-    //         }
-    //     }
-    // });
+        if (doAnim1) {
+
+            if (angle >= 0) {
+                // Stop further updates when the angle exceeds or reaches 180 degrees
+                updateCircularMotion(new THREE.Vector3(1, -1, 0), new THREE.Vector3(1, 1, 0), 2, [12, 13, 14, 21, 22, 23]);
+                angle -= delta * 9;
+            } else {
+                setDoAnim1(false);
+                setDoAnim2(true);
+                setStartingAngle(2 * Math.PI - 0.05);
+                setDoCreate1(true);
+            }
+        }
+        else if (doAnim2) {
+            if (angle >= Math.PI) {
+                // Stop further updates when the angle exceeds or reaches 180 degrees
+                updateCircularMotion(new THREE.Vector3(2, 2, 0), new THREE.Vector3(2, 0, 0), 2, [24, 25, 26, 30, 31, 32]);
+                angle -= delta * 9;
+            } else {
+                setGeometry(geometry);
+            }
+        }
+    });
 
 
     return (
@@ -268,9 +302,9 @@ const OrigamiPlane = ({ positionOrigami, rotationOrigami }) => {
                 >
                     <meshBasicMaterial
                         side={2}
-                        // map={texture}
+                        map={texture}
                         transparent={true}
-                        wireframe={true}
+                    // wireframe={true}
                     />
                     <mesh
                         ref={sphereCollider}
@@ -279,10 +313,16 @@ const OrigamiPlane = ({ positionOrigami, rotationOrigami }) => {
                         onPointerOver={handlePointerOver}
                         onPointerOut={handlePointerOut}
                         onClick={() => {
+                            document.body.style.cursor = "auto";
+                            setIsOrigamiClicked(true)
+                            // handlePointerOut();
+                            moveOrigamiToCamera();
+                            setTimeout(() => {
 
-                            handlePointerOut();
-                            setIsLetterClicked((prev) => !prev);
-                            setIsLetterVisible((prev) => !prev);
+                                setIsLetterClicked((prev) => !prev);
+                                setIsLetterVisible((prev) => !prev);
+                            }, 800);
+
                             setIsCameraMoving(false)
                         }}
                         pointerEvents="auto" // Enable pointer events

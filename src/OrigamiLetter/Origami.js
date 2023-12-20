@@ -4,9 +4,9 @@ import * as THREE from "three";
 import { TextureLoader } from "three";
 import gsap from "gsap";
 import { useLoader } from "@react-three/fiber/dist/react-three-fiber.cjs";
-import { useStateContext } from "./GlobalContext/StateContext";
+import { useStateContext } from "../GlobalContext/StateContext";
 import { Float } from "@react-three/drei";
-
+import { useThree } from "@react-three/fiber";
 
 const Origami = ({ positionOrigami }) => {
     // Create a ref to the mesh
@@ -17,6 +17,7 @@ const Origami = ({ positionOrigami }) => {
     texture.repeat.set(0.5, 0.286)
     texture.offset.set(0, 0);
     const { isLetterVisible, setIsLetterVisible } = useStateContext();
+    const { camera } = useThree(); // Access to the camera
 
     // State to hold the rotation angle in degrees
     const [rotationAngleX, setRotationAngleX] = useState(0);
@@ -26,6 +27,8 @@ const Origami = ({ positionOrigami }) => {
     const [rotationSpeedX, setRotationSpeedX] = useState(Math.random() * 0.02 + 0.005);
     const [rotationSpeedY, setRotationSpeedY] = useState(Math.random() * 0.02 + 0.005);
     const [rotationSpeedZ, setRotationSpeedZ] = useState(Math.random() * 0.02 + 0.005);
+
+    console.log(camera.position);
 
     useFrame(() => {
         if (isMoving === false) {
@@ -102,7 +105,7 @@ const Origami = ({ positionOrigami }) => {
 
     // This will run every frame
     return (
-        <group ref={group} position={[-3, 0.5, 0]}>
+        <group ref={group} position={[camera.position.x - 3, camera.position.y - 0.5, camera.position.z - 3]}>
             <mesh
                 geometry={geometry}
                 position={[-1, -1.3, 0.8]}

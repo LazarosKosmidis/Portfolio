@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useRef, useState, useEffect, useCallback } from "react";
+
 import { Canvas } from "@react-three/fiber";
 import { Box } from '@mui/material';
 import { OrbitControls, Sparkles, Stars, Sky } from '@react-three/drei'; // Import OrbitControls and Stars for camera control and background stars
 import * as THREE from "three";
-import Origami from "./Origami";
+import Origami from "./OrigamiLetter/Origami";
 import OrigamiPlane from "./OrigamiLetter/OrigamiPlane"
 import Camera from "./Camera";
 import { Stats } from "@react-three/drei";
@@ -13,13 +14,72 @@ function Experience() {
     const { isLetterClicked, setIsLetterClicked } = useStateContext();
     const { isLetterVisible, setIsLetterVisible } = useStateContext();
     const { isCameraMoving, setIsCameraMoving } = useStateContext();
+    const [cameraPosition, setCameraPosition] = useState([0, 1, 7]);
 
-    const [isPositionOrigami, setIsPositionOrigami] = useState([0, 0, 0]);
-    const [isPositionOrigami1, setIsPositionOrigami1] = useState([-2, 0, 0]);
-    const [isPositionOrigami2, setIsPositionOrigami2] = useState([0, -1.5, 0]);
+    // const [isPositionOrigami, setIsPositionOrigami] = useState();
+    // const [isPositionOrigami1, setIsPositionOrigami1] = useState([-2, 2.5, 0]);
+    // const [isPositionOrigami2, setIsPositionOrigami2] = useState([-1.5, -1.5, 0]);
+    let positionOrigamies = []
+    const startingPos = 0
+    let y = -20;
+    let x = -10
+    for (let i = 0; i < 50; i++) {
 
+        if (i % 5 === 0) {
+            y += 4
+            x = -10
+        }
+        positionOrigamies.push([startingPos + x, startingPos + y, startingPos])
+        x += 4
+    }
+    // setIsPositionOrigami(positionOrigamies)
+    const cameraRef = useRef();
 
     const [isRotationOrigami, setIsRotationOrigami] = useState([0, 0, 0])
+    const wheelSensitivity = 0.0015;
+    const touchStart = useRef(new THREE.Vector2())
+    // Event handler for mouse wheel
+    function moveCamera(e) {
+        const newCameraPosition = [...cameraPosition];
+        newCameraPosition[1] -= e.deltaY * wheelSensitivity; // Adjust this value for the desired scroll speed
+        if (newCameraPosition[1] <= -10) {
+            newCameraPosition[1] = -10;
+        } else if (newCameraPosition[1] >= 10) {
+            newCameraPosition[1] = 10;
+        }
+        setCameraPosition(newCameraPosition);
+    }
+
+    useEffect(() => {
+        // Add touch screen swipe event listeners
+        const canvas = document.querySelector("canvas");
+        canvas.addEventListener("touchstart", (e) => handleTouchStart(e));
+        canvas.addEventListener("touchmove", (e) => handleTouchMove(e));
+        return () => {
+            canvas.removeEventListener("touchstart", (e) => handleTouchStart(e));
+            canvas.removeEventListener("touchmove", (e) => handleTouchMove(e));
+        };
+        //eslint-disable-next-line
+    }, []);
+
+    const handleTouchStart = useCallback((event) => {
+        touchStart.current.set(event.touches[0].clientX, event.touches[0].clientY);
+    }, []);
+
+
+    const handleTouchMove = useCallback(
+        (event) => {
+            const touchEnd = new THREE.Vector2(event.touches[0].clientX, event.touches[0].clientY);
+            const delta = touchEnd.clone().sub(touchStart.current);
+            touchStart.current.copy(touchEnd);
+            const sensitivity = cameraPosition[1] - delta.y > 10 || cameraPosition[1] - delta.y < -10 ? 0 : 0.02;
+            let newPosition = (cameraPosition[1] -= delta.y * sensitivity);
+            setCameraPosition([cameraPosition[0], newPosition, cameraPosition[2]]);
+        },
+        // eslint-disable-next-line
+        [cameraPosition]
+    );
+
     return (
         <div>
             <Canvas
@@ -32,7 +92,8 @@ function Experience() {
                     background: "black",
                 }}
                 camera={{
-                    position: [0, 1, 3],
+                    ref: { cameraRef },
+                    position: [0, 1, 7],
                     rotation: [0, THREE.MathUtils.degToRad(0), 0],
                     fov: 100,
                     aspect: window.innerWidth / window.innerHeight,
@@ -40,6 +101,7 @@ function Experience() {
                     far: 1000,
 
                 }}
+                onWheel={moveCamera}
                 gl={{
                     antialias: true,
                     toneMapping: THREE.LinearToneMapping,
@@ -52,14 +114,15 @@ function Experience() {
                 <pointLight position={[10, 10, 10]} />
 
                 {isLetterClicked && (<Origami />)}
-                {isLetterVisible && (<OrigamiPlane positionOrigami={isPositionOrigami} rotationOrigami={isRotationOrigami} />)}
-                {/* {isLetterVisible && (<OrigamiPlane positionOrigami={isPositionOrigami1} rotationOrigami={isRotationOrigami} />)}
 
-                {isLetterVisible && (<OrigamiPlane positionOrigami={isPositionOrigami2} rotationOrigami={isRotationOrigami} />)} */}
+                {isLetterVisible && positionOrigamies.map((position, index) => (
+                    <OrigamiPlane key={index} positionOrigami={positionOrigamies[index]} rotationOrigami={isRotationOrigami} />
+                ))}
 
-                {/* {isCameraMoving && (<Camera />)} */}
+                {/* {isLetterVisible && (<OrigamiPlane positionOrigami={positionOrigamies[0]} rotationOrigami={isRotationOrigami} />)} */}
+                {isCameraMoving && (<Camera cameraPosition={cameraPosition} />)}
                 {/* Add camera controls */}
-                <OrbitControls />
+                {/* <OrbitControls /> */}
                 {/* <Sky distance={450000} sunPosition={[10, -0.1, 0]} inclination={0} azimuth={0.5} /> */}
                 {/* < Stars
                     saturation={0}

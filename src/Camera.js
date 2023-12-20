@@ -2,47 +2,13 @@ import { useEffect } from "react";
 import * as THREE from "three";
 import { useFrame, useThree } from "@react-three/fiber";
 
-const Camera = () => {
+const Camera = ({ cameraPosition }) => {
     const { camera } = useThree();
-
-
-    // Define damping factor, y-axis limits, and wheel sensitivity
-    const dampingFactor = 0.05;
-    const minY = -10;
-    const maxY = 10;
-    const wheelSensitivity = 0.0015;
-
-    // Set up a target position for smooth camera movement
-    const targetPosition = new THREE.Vector3();
-    targetPosition.copy(camera.position);
-
-    // Event handler for mouse wheel
-    const handleWheel = (event) => {
-        // Update target position based on the mouse wheel movement
-        targetPosition.y -= event.deltaY * wheelSensitivity;
-    };
-
-    // Attach the wheel event listener
-    useEffect(() => {
-        if (camera.position.y >= 10 || camera.position.y <= -10) {
-            return;
-        }
-        const handleWheelEvent = (event) => handleWheel(event);
-        window.addEventListener("wheel", handleWheelEvent);
-
-        return () => {
-            window.removeEventListener("wheel", handleWheelEvent);
-        };
-    },); // Empty dependency array ensures the effect runs once on mount and cleans up on unmount
+    const tempVec3 = new THREE.Vector3();
 
     // Update camera position on every frame
-    useFrame(() => {
-
-        // Interpolate camera position towards the target position with damping
-        camera.position.lerp(targetPosition, dampingFactor);
-
-        // Clamp camera position to y-axis limits
-        camera.position.setY(THREE.MathUtils.clamp(camera.position.y, minY, maxY));
+    useFrame(({ camera }) => {
+        camera.position.lerp(tempVec3.set(cameraPosition[0], cameraPosition[1], cameraPosition[2]), 0.03);
     });
 
     return null;
