@@ -16,7 +16,16 @@ function Experience() {
     const { isCameraMoving, setIsCameraMoving } = useStateContext();
     const [cameraPosition, setCameraPosition] = useState([0, 1, 7]);
     const [isRotationOrigami, setIsRotationOrigami] = useState([0, 0, 0])
+    const texturePaths = [
+        "/textures/05_anahanum.jpg",
+        "/textures/26_arina_kashchavtseva.jpg",
+        "/textures/49_angelina_bagdasaryan.jpg",
+        "/textures/24_alla_dimareva.jpg",
+        "/textures/22_alla_dimareva.jpg",
+        "/textures/13_daniil_protasov.jpg",
+        "/textures/07_angelina_bagdasaryan.jpg"
 
+    ]
     // const [isPositionOrigami, setIsPositionOrigami] = useState();
     // const [isPositionOrigami1, setIsPositionOrigami1] = useState([-2, 2.5, 0]);
     // const [isPositionOrigami2, setIsPositionOrigami2] = useState([-1.5, -1.5, 0]);
@@ -33,6 +42,7 @@ function Experience() {
         positionOrigamies.push([startingPos + x, startingPos + y, startingPos])
         x += 4
     }
+
     let rotationOrigamies = []
     function setRotation() {
         const min = -1;
@@ -128,7 +138,7 @@ function Experience() {
                 <ambientLight intensity={0.5} />
                 <pointLight position={[10, 10, 10]} />
 
-                {isLetterClicked && (<Origami />)}
+                {isLetterClicked && (<Origami texturePaths={texturePaths[Math.floor(Math.random() * (6))]} />)}
 
                 {isLetterVisible && positionOrigamies.map((position, index) => (
                     <OrigamiPlane key={index} positionOrigami={positionOrigamies[index]} rotationOrigami={isRotationOrigami[index]} />

@@ -8,12 +8,12 @@ import { useStateContext } from "../GlobalContext/StateContext";
 import { Float } from "@react-three/drei";
 import { useThree } from "@react-three/fiber";
 
-const Origami = ({ positionOrigami }) => {
+const Origami = ({ positionOrigami, texturePaths }) => {
     // Create a ref to the mesh
     const materialRef = useRef();
     const group = useRef();
     const [isMoving, setisMoving] = useState(true)
-    const texture = useLoader(TextureLoader, "/textures/05_anahanum.jpg");
+    const texture = useLoader(TextureLoader, texturePaths);
     texture.repeat.set(0.5, 0.286)
     texture.offset.set(0, 0);
     const { isLetterVisible, setIsLetterVisible } = useStateContext();
