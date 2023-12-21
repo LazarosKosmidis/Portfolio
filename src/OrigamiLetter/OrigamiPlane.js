@@ -8,7 +8,7 @@ import { useLoader } from "@react-three/fiber";
 import { Float } from "@react-three/drei";
 import gsap from "gsap";
 import * as THREE from "three";
-
+import { useThree } from "@react-three/fiber";
 const OrigamiPlane = ({ positionOrigami, rotationOrigami }) => {
     const planeRef = useRef();
     const sphereCollider = useRef();
@@ -16,6 +16,7 @@ const OrigamiPlane = ({ positionOrigami, rotationOrigami }) => {
     const { isLetterVisible, setIsLetterVisible } = useStateContext();
     const { isCameraMoving, setIsCameraMoving } = useStateContext();
     const [isOrigamiClicked, setIsOrigamiClicked] = useState(false);
+    const { camera } = useThree(); // Access to the camera
 
     const [isPosition, setPosition] = useState(positionOrigami)
     const [doAnim1, setDoAnim1] = useState(false)
@@ -145,7 +146,7 @@ const OrigamiPlane = ({ positionOrigami, rotationOrigami }) => {
         setDoAnim1(true);
 
         setStartingAngle(Math.PI)
-
+        moveOrigamiToCamera();
     }, [isOrigamiClicked]);
 
     useEffect(() => {
@@ -164,17 +165,13 @@ const OrigamiPlane = ({ positionOrigami, rotationOrigami }) => {
                 z: planeRef.current.position.z + 0.5,
                 duration: 0.5,
             })
+            gsap.to(planeRef.current.rotation, {
+                x: 0,
+                y: 0,
+                z: 0,
+                duration: 0.5,
+            })
         }
-
-
-
-        gsap.to(planeRef.current.rotation, {
-            x: 0,
-            y: 0,
-            z: 0,
-            duration: 0.5,
-        })
-
         document.body.style.cursor = "pointer";
     };
 
@@ -182,20 +179,20 @@ const OrigamiPlane = ({ positionOrigami, rotationOrigami }) => {
         document.body.style.cursor = "auto";
         console.log(isOrigamiClicked);
         if (!isOrigamiClicked) {
-            console.log("gg");
             gsap.to(planeRef.current.position, {
                 z: planeRef.current.position.z - 0.5,
+                duration: 0.5,
+            })
+            gsap.to(planeRef.current.rotation, {
+                x: rotationOrigami[0],
+                y: rotationOrigami[1],
+                z: rotationOrigami[2],
                 duration: 0.5,
             })
         }
 
 
-        gsap.to(planeRef.current.rotation, {
-            x: rotationOrigami[0],
-            y: rotationOrigami[1],
-            z: rotationOrigami[2],
-            duration: 0.5,
-        })
+
 
         // gsap.to(planeRef.current.position, {
         //     x: positionOrigami[0],
@@ -205,6 +202,8 @@ const OrigamiPlane = ({ positionOrigami, rotationOrigami }) => {
         // })
     };
 
+
+
     // Calculate initial angle for circular motion
     let angle = startingAngle
     const angularSpeed = 0.02; // Adjust the angular speed as needed
@@ -213,8 +212,10 @@ const OrigamiPlane = ({ positionOrigami, rotationOrigami }) => {
     const moveOrigamiToCamera = (() => {
         if (isOrigamiClicked) {
             gsap.to(planeRef.current.position, {
-                z: planeRef.current.position.z + 8.5,
-                duration: 8.5,
+                // x: camera.position.x,
+                // y: camera.position.y,
+                z: camera.position.z - 2,
+                duration: 1.5,
             })
         }
     })
@@ -317,6 +318,7 @@ const OrigamiPlane = ({ positionOrigami, rotationOrigami }) => {
                             setIsOrigamiClicked(true)
                             // handlePointerOut();
                             moveOrigamiToCamera();
+                            handlePointerOver();
                             setTimeout(() => {
 
                                 setIsLetterClicked((prev) => !prev);

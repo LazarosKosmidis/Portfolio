@@ -28,7 +28,6 @@ const Origami = ({ positionOrigami }) => {
     const [rotationSpeedY, setRotationSpeedY] = useState(Math.random() * 0.02 + 0.005);
     const [rotationSpeedZ, setRotationSpeedZ] = useState(Math.random() * 0.02 + 0.005);
 
-    console.log(camera.position);
 
     useFrame(() => {
         if (isMoving === false) {

@@ -15,6 +15,7 @@ function Experience() {
     const { isLetterVisible, setIsLetterVisible } = useStateContext();
     const { isCameraMoving, setIsCameraMoving } = useStateContext();
     const [cameraPosition, setCameraPosition] = useState([0, 1, 7]);
+    const [isRotationOrigami, setIsRotationOrigami] = useState([0, 0, 0])
 
     // const [isPositionOrigami, setIsPositionOrigami] = useState();
     // const [isPositionOrigami1, setIsPositionOrigami1] = useState([-2, 2.5, 0]);
@@ -32,10 +33,24 @@ function Experience() {
         positionOrigamies.push([startingPos + x, startingPos + y, startingPos])
         x += 4
     }
+    let rotationOrigamies = []
+    function setRotation() {
+        const min = -1;
+        const max = 1;
+        for (let i = 0; i < 50; i++) {
+            const rotationX = Math.random() * (max - min) + min;
+            const rotationY = Math.random() * (max - min) + min;
+            const rotationZ = Math.random() * (max - min) + min;
+            rotationOrigamies.push([rotationX, rotationY, rotationZ]);
+        }
+        setIsRotationOrigami(rotationOrigamies)
+    }
+    useEffect(() => {
+        setRotation();
+    }, [])
     // setIsPositionOrigami(positionOrigamies)
     const cameraRef = useRef();
 
-    const [isRotationOrigami, setIsRotationOrigami] = useState([0, 0, 0])
     const wheelSensitivity = 0.0015;
     const touchStart = useRef(new THREE.Vector2())
     // Event handler for mouse wheel
@@ -116,7 +131,7 @@ function Experience() {
                 {isLetterClicked && (<Origami />)}
 
                 {isLetterVisible && positionOrigamies.map((position, index) => (
-                    <OrigamiPlane key={index} positionOrigami={positionOrigamies[index]} rotationOrigami={isRotationOrigami} />
+                    <OrigamiPlane key={index} positionOrigami={positionOrigamies[index]} rotationOrigami={isRotationOrigami[index]} />
                 ))}
 
                 {/* {isLetterVisible && (<OrigamiPlane positionOrigami={positionOrigamies[0]} rotationOrigami={isRotationOrigami} />)} */}
