@@ -167,6 +167,7 @@ function Experience() {
                 <Stats />
             </Canvas>
             <Menu />
+
         </div>
     );
 }

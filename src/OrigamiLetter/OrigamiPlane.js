@@ -3,9 +3,8 @@ import { useFrame } from "@react-three/fiber";
 import { BoxGeometry, SphereGeometry } from "three";
 import { useStateContext } from "../GlobalContext/StateContext.js";
 import { TextureLoader } from "three";
-
 import { useLoader } from "@react-three/fiber";
-import { Float } from "@react-three/drei";
+import { Float, Html } from "@react-three/drei";
 import gsap from "gsap";
 import * as THREE from "three";
 import { useThree } from "@react-three/fiber";
@@ -146,7 +145,7 @@ const OrigamiPlane = ({ positionOrigami, rotationOrigami }) => {
         setDoAnim1(true);
 
         setStartingAngle(Math.PI)
-        moveOrigamiToCamera();
+        // moveOrigamiToCamera();
     }, [isOrigamiClicked]);
 
     useEffect(() => {
@@ -212,8 +211,8 @@ const OrigamiPlane = ({ positionOrigami, rotationOrigami }) => {
     const moveOrigamiToCamera = (() => {
         if (isOrigamiClicked) {
             gsap.to(planeRef.current.position, {
-                // x: camera.position.x,
-                // y: camera.position.y,
+                x: camera.position.x,
+                y: camera.position.y,
                 z: camera.position.z - 2,
                 duration: 1.5,
             })
@@ -284,10 +283,11 @@ const OrigamiPlane = ({ positionOrigami, rotationOrigami }) => {
                 angle -= delta * 9;
             } else {
                 setGeometry(geometry);
+                moveOrigamiToCamera();
+
             }
         }
     });
-
 
     return (
         <group>
@@ -298,8 +298,6 @@ const OrigamiPlane = ({ positionOrigami, rotationOrigami }) => {
                     position={isPosition}
                     scale={[1, 1, 1]}
                     rotation={rotationOrigami}
-                // Add your click handler
-
                 >
                     <meshBasicMaterial
                         side={2}
@@ -317,13 +315,12 @@ const OrigamiPlane = ({ positionOrigami, rotationOrigami }) => {
                             document.body.style.cursor = "auto";
                             setIsOrigamiClicked(true)
                             // handlePointerOut();
-                            moveOrigamiToCamera();
                             handlePointerOver();
                             setTimeout(() => {
 
                                 setIsLetterClicked((prev) => !prev);
                                 setIsLetterVisible((prev) => !prev);
-                            }, 800);
+                            }, 1500);
 
                             setIsCameraMoving(false)
                         }}
@@ -338,9 +335,9 @@ const OrigamiPlane = ({ positionOrigami, rotationOrigami }) => {
                         />
                     </mesh>
                 </mesh>
-
             </Float>
         </group >
+
     );
 };
 
