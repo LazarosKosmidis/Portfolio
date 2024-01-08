@@ -10,8 +10,11 @@ import Camera from "./Camera";
 import { Stats } from "@react-three/drei";
 import { useStateContext } from "./GlobalContext/StateContext";
 import Menu from "./UI/Menu";
+import NonClickable from "./OrigamiLetter/NonClickable";
+
 function Experience() {
     const { isLetterClicked, setIsLetterClicked } = useStateContext();
+    const { isNonClickable, setINonClickable } = useStateContext();
     const { isLetterVisible, setIsLetterVisible } = useStateContext();
     const { isCameraMoving, setIsCameraMoving } = useStateContext();
     const [cameraPosition, setCameraPosition] = useState([0, 1, 7]);
@@ -167,6 +170,7 @@ function Experience() {
                 <Stats />
             </Canvas>
             <Menu />
+            {isNonClickable && <NonClickable />}
 
         </div>
     );

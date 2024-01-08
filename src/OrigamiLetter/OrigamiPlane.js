@@ -13,6 +13,8 @@ const OrigamiPlane = ({ positionOrigami, rotationOrigami }) => {
     const sphereCollider = useRef();
     const { isLetterClicked, setIsLetterClicked } = useStateContext();
     const { isLetterVisible, setIsLetterVisible } = useStateContext();
+    const { isNonClickable, setINonClickable } = useStateContext();
+
     const { isCameraMoving, setIsCameraMoving } = useStateContext();
     const [isOrigamiClicked, setIsOrigamiClicked] = useState(false);
     const { camera } = useThree(); // Access to the camera
@@ -313,11 +315,12 @@ const OrigamiPlane = ({ positionOrigami, rotationOrigami }) => {
                         onPointerOut={handlePointerOut}
                         onClick={() => {
                             document.body.style.cursor = "auto";
+                            setINonClickable(true)
                             setIsOrigamiClicked(true)
                             // handlePointerOut();
                             handlePointerOver();
                             setTimeout(() => {
-
+                                setINonClickable(false);
                                 setIsLetterClicked((prev) => !prev);
                                 setIsLetterVisible((prev) => !prev);
                             }, 1500);
@@ -332,6 +335,7 @@ const OrigamiPlane = ({ positionOrigami, rotationOrigami }) => {
                             transparent={true}
                             opacity={0}
                             visible={false}
+
                         />
                     </mesh>
                 </mesh>
