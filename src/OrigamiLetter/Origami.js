@@ -4,7 +4,6 @@ import * as THREE from "three";
 import { TextureLoader } from "three";
 import gsap from "gsap";
 import { useLoader } from "@react-three/fiber/dist/react-three-fiber.cjs";
-import { useStateContext } from "../globalContext/StateContext";
 import { Float } from "@react-three/drei";
 import { useThree } from "@react-three/fiber";
 

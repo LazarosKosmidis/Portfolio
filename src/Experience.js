@@ -10,7 +10,7 @@ import Camera from "./Camera";
 import { Stats } from "@react-three/drei";
 import { useStateContext } from "./globalContext/StateContext";
 import Menu from "./ui/Menu";
-import NonClickable from "./origamiLetter/NonClickable";
+import NonClickable from "./origamiPlanerigamiLetter/NonClickable";
 
 function Experience() {
     const { isLetterClicked, setIsLetterClicked } = useStateContext();
@@ -160,13 +160,13 @@ function Experience() {
                     count={10000}
                     color={"orange"}
                     speed={1}
-                    scale={[40, 40, 10]}
+                    scale={[40, 40, 20]}
                     size={3}
-                    noise={0.5}
+                    noise={0.6}
                 />
                 {/* Add background stars */}
                 {/* HELPERS */}
-                <axesHelper args={[50]} position={[0, 0, 0]} />
+                {/* <axesHelper args={[50]} position={[0, 0, 0]} /> */}
                 <Stats />
             </Canvas>
             <Menu />

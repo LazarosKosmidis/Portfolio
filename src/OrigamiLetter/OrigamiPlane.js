@@ -11,18 +11,17 @@ import { useThree } from "@react-three/fiber";
 const OrigamiPlane = ({ positionOrigami, rotationOrigami }) => {
     const planeRef = useRef();
     const sphereCollider = useRef();
-    const { isLetterClicked, setIsLetterClicked } = useStateContext();
-    const { isLetterVisible, setIsLetterVisible } = useStateContext();
-    const { isNonClickable, setINonClickable } = useStateContext();
+    const { setIsLetterClicked } = useStateContext();
+    const { setIsLetterVisible } = useStateContext();
+    const { setINonClickable } = useStateContext();
 
-    const { isCameraMoving, setIsCameraMoving } = useStateContext();
+    const { setIsCameraMoving } = useStateContext();
     const [isOrigamiClicked, setIsOrigamiClicked] = useState(false);
     const { camera } = useThree(); // Access to the camera
 
     const [isPosition, setPosition] = useState(positionOrigami)
     const [doAnim1, setDoAnim1] = useState(false)
     const [doAnim2, setDoAnim2] = useState(false)
-    const [doCreate, setDoCreate] = useState(true)
     const [geometry, setGeometry] = useState(new THREE.BufferGeometry());
     const [doCreate1, setDoCreate1] = useState(false)
     const [startingAngle, setStartingAngle] = useState(0)
@@ -118,7 +117,6 @@ const OrigamiPlane = ({ positionOrigami, rotationOrigami }) => {
 
         setPosition([positionOrigami[0] + 1, positionOrigami[1] + 1, planeRef.current.position.z])
         setSphereColliderPos([0, -0.7, 0]) // -1 on x and -1 on y
-
         setGeometry(geometry_tmp)
     }
     const createNewGeometry = (old_Geometry, x_move, y_move) => {
@@ -170,7 +168,7 @@ const OrigamiPlane = ({ positionOrigami, rotationOrigami }) => {
                 x: 0,
                 y: 0,
                 z: 0,
-                duration: 0.5,
+                duration: 0.3,
             })
         }
         document.body.style.cursor = "pointer";
@@ -226,37 +224,25 @@ const OrigamiPlane = ({ positionOrigami, rotationOrigami }) => {
         const cos = Math.cos(angle)
         const sin = Math.sin(angle)
         if (vertices === 1) {
-
-            geometry.attributes.position.array[vertex_coordinates[0]] = ([U_Vec_Norm.x * U_Vec_Norm.x * (1 - cos) + cos] * Rotate_point.x) + ([U_Vec_Norm.z * U_Vec_Norm.x * (1 - cos) - U_Vec_Norm.z * sin] * Rotate_point.y) + ([U_Vec_Norm.x * U_Vec_Norm.z * (1 - cos) + U_Vec_Norm.y * sin] * Rotate_point.z)
-            geometry.attributes.position.array[vertex_coordinates[1]] = ([U_Vec_Norm.y * U_Vec_Norm.x * (1 - cos) + U_Vec_Norm.z * sin] * Rotate_point.x) + ([U_Vec_Norm.z * U_Vec_Norm.x * (1 - cos) + cos] * Rotate_point.y) + ([U_Vec_Norm.y * U_Vec_Norm.z * (1 - cos) - U_Vec_Norm.x * sin] * Rotate_point.z)
-            geometry.attributes.position.array[vertex_coordinates[2]] = -([U_Vec_Norm.z * U_Vec_Norm.x * (1 - cos) + U_Vec_Norm.y * sin] * Rotate_point.x) + ([U_Vec_Norm.y * U_Vec_Norm.z * (1 - cos) + U_Vec_Norm.x * sin] * Rotate_point.y) + ([U_Vec_Norm.z * U_Vec_Norm.z * (1 - cos) + cos] * Rotate_point.z)
-
+            for (let i = 0; i < 4; i += 3) {
+                geometry.attributes.position.array[vertex_coordinates[i]] = ([U_Vec_Norm.x * U_Vec_Norm.x * (1 - cos) + cos] * Rotate_point.x) + ([U_Vec_Norm.y * U_Vec_Norm.x * (1 - cos) - U_Vec_Norm.z * sin] * Rotate_point.y) + ([U_Vec_Norm.x * U_Vec_Norm.z * (1 - cos) + U_Vec_Norm.y * sin] * Rotate_point.z)
+                geometry.attributes.position.array[vertex_coordinates[i + 1]] = ([U_Vec_Norm.y * U_Vec_Norm.x * (1 - cos) + U_Vec_Norm.z * sin] * Rotate_point.x) + ([U_Vec_Norm.y * U_Vec_Norm.y * (1 - cos) + cos] * Rotate_point.y) + ([U_Vec_Norm.y * U_Vec_Norm.z * (1 - cos) - U_Vec_Norm.x * sin] * Rotate_point.z)
+                geometry.attributes.position.array[vertex_coordinates[i + 2]] = -([U_Vec_Norm.z * U_Vec_Norm.x * (1 - cos) + U_Vec_Norm.y * sin] * Rotate_point.x) + ([U_Vec_Norm.y * U_Vec_Norm.z * (1 - cos) + U_Vec_Norm.x * sin] * Rotate_point.y) + ([U_Vec_Norm.z * U_Vec_Norm.z * (1 - cos) + cos] * Rotate_point.z)
+            }
         }
         else if (vertices === 2) {
-
-            geometry.attributes.position.array[vertex_coordinates[0]] = ([U_Vec_Norm.x * U_Vec_Norm.x * (1 - cos) + cos] * Rotate_point.x) + ([U_Vec_Norm.y * U_Vec_Norm.x * (1 - cos) - U_Vec_Norm.z * sin] * Rotate_point.y) + ([U_Vec_Norm.x * U_Vec_Norm.z * (1 - cos) + U_Vec_Norm.y * sin] * Rotate_point.z)
-            geometry.attributes.position.array[vertex_coordinates[1]] = ([U_Vec_Norm.y * U_Vec_Norm.x * (1 - cos) + U_Vec_Norm.z * sin] * Rotate_point.x) + ([U_Vec_Norm.y * U_Vec_Norm.y * (1 - cos) + cos] * Rotate_point.y) + ([U_Vec_Norm.y * U_Vec_Norm.z * (1 - cos) - U_Vec_Norm.x * sin] * Rotate_point.z)
-            geometry.attributes.position.array[vertex_coordinates[2]] = -([U_Vec_Norm.z * U_Vec_Norm.x * (1 - cos) + U_Vec_Norm.y * sin] * Rotate_point.x) + ([U_Vec_Norm.y * U_Vec_Norm.z * (1 - cos) + U_Vec_Norm.x * sin] * Rotate_point.y) + ([U_Vec_Norm.z * U_Vec_Norm.z * (1 - cos) + cos] * Rotate_point.z)
-
-            geometry.attributes.position.array[vertex_coordinates[3]] = ([U_Vec_Norm.x * U_Vec_Norm.x * (1 - cos) + cos] * Rotate_point.x) + ([U_Vec_Norm.y * U_Vec_Norm.x * (1 - cos) - U_Vec_Norm.z * sin] * Rotate_point.y) + ([U_Vec_Norm.x * U_Vec_Norm.z * (1 - cos) + U_Vec_Norm.y * sin] * Rotate_point.z)
-            geometry.attributes.position.array[vertex_coordinates[4]] = ([U_Vec_Norm.y * U_Vec_Norm.x * (1 - cos) + U_Vec_Norm.z * sin] * Rotate_point.x) + ([U_Vec_Norm.y * U_Vec_Norm.y * (1 - cos) + cos] * Rotate_point.y) + ([U_Vec_Norm.y * U_Vec_Norm.z * (1 - cos) - U_Vec_Norm.x * sin] * Rotate_point.z)
-            geometry.attributes.position.array[vertex_coordinates[5]] = -([U_Vec_Norm.z * U_Vec_Norm.x * (1 - cos) + U_Vec_Norm.y * sin] * Rotate_point.x) + ([U_Vec_Norm.y * U_Vec_Norm.z * (1 - cos) + U_Vec_Norm.x * sin] * Rotate_point.y) + ([U_Vec_Norm.z * U_Vec_Norm.z * (1 - cos) + cos] * Rotate_point.z)
-
+            for (let i = 0; i < 6; i += 3) {
+                geometry.attributes.position.array[vertex_coordinates[i]] = ([U_Vec_Norm.x * U_Vec_Norm.x * (1 - cos) + cos] * Rotate_point.x) + ([U_Vec_Norm.y * U_Vec_Norm.x * (1 - cos) - U_Vec_Norm.z * sin] * Rotate_point.y) + ([U_Vec_Norm.x * U_Vec_Norm.z * (1 - cos) + U_Vec_Norm.y * sin] * Rotate_point.z)
+                geometry.attributes.position.array[vertex_coordinates[i + 1]] = ([U_Vec_Norm.y * U_Vec_Norm.x * (1 - cos) + U_Vec_Norm.z * sin] * Rotate_point.x) + ([U_Vec_Norm.y * U_Vec_Norm.y * (1 - cos) + cos] * Rotate_point.y) + ([U_Vec_Norm.y * U_Vec_Norm.z * (1 - cos) - U_Vec_Norm.x * sin] * Rotate_point.z)
+                geometry.attributes.position.array[vertex_coordinates[i + 2]] = -([U_Vec_Norm.z * U_Vec_Norm.x * (1 - cos) + U_Vec_Norm.y * sin] * Rotate_point.x) + ([U_Vec_Norm.y * U_Vec_Norm.z * (1 - cos) + U_Vec_Norm.x * sin] * Rotate_point.y) + ([U_Vec_Norm.z * U_Vec_Norm.z * (1 - cos) + cos] * Rotate_point.z)
+            }
         }
         else if (vertices === 3) {
-
-            geometry.attributes.position.array[vertex_coordinates[0]] = ([U_Vec_Norm.x * U_Vec_Norm.x * (1 - cos) + cos] * Rotate_point.x) + ([U_Vec_Norm.z * U_Vec_Norm.x * (1 - cos) - U_Vec_Norm.z * sin] * Rotate_point.y) + ([U_Vec_Norm.x * U_Vec_Norm.z * (1 - cos) + U_Vec_Norm.y * sin] * Rotate_point.z)
-            geometry.attributes.position.array[vertex_coordinates[1]] = ([U_Vec_Norm.y * U_Vec_Norm.x * (1 - cos) + U_Vec_Norm.z * sin] * Rotate_point.x) + ([U_Vec_Norm.z * U_Vec_Norm.x * (1 - cos) + cos] * Rotate_point.y) + ([U_Vec_Norm.y * U_Vec_Norm.z * (1 - cos) - U_Vec_Norm.x * sin] * Rotate_point.z)
-            geometry.attributes.position.array[vertex_coordinates[2]] = -([U_Vec_Norm.z * U_Vec_Norm.x * (1 - cos) + U_Vec_Norm.y * sin] * Rotate_point.x) + ([U_Vec_Norm.y * U_Vec_Norm.z * (1 - cos) + U_Vec_Norm.x * sin] * Rotate_point.y) + ([U_Vec_Norm.z * U_Vec_Norm.z * (1 - cos) + cos] * Rotate_point.z)
-
-            geometry.attributes.position.array[vertex_coordinates[3]] = ([U_Vec_Norm.x * U_Vec_Norm.x * (1 - cos) + cos] * Rotate_point.x) + ([U_Vec_Norm.z * U_Vec_Norm.x * (1 - cos) - U_Vec_Norm.z * sin] * Rotate_point.y) + ([U_Vec_Norm.x * U_Vec_Norm.z * (1 - cos) + U_Vec_Norm.y * sin] * Rotate_point.z)
-            geometry.attributes.position.array[vertex_coordinates[4]] = ([U_Vec_Norm.y * U_Vec_Norm.x * (1 - cos) + U_Vec_Norm.z * sin] * Rotate_point.x) + ([U_Vec_Norm.z * U_Vec_Norm.x * (1 - cos) + cos] * Rotate_point.y) + ([U_Vec_Norm.y * U_Vec_Norm.z * (1 - cos) - U_Vec_Norm.x * sin] * Rotate_point.z)
-            geometry.attributes.position.array[vertex_coordinates[5]] = -([U_Vec_Norm.z * U_Vec_Norm.x * (1 - cos) + U_Vec_Norm.y * sin] * Rotate_point.x) + ([U_Vec_Norm.y * U_Vec_Norm.z * (1 - cos) + U_Vec_Norm.x * sin] * Rotate_point.y) + ([U_Vec_Norm.z * U_Vec_Norm.z * (1 - cos) + cos] * Rotate_point.z)
-
-            geometry.attributes.position.array[vertex_coordinates[6]] = ([U_Vec_Norm.x * U_Vec_Norm.x * (1 - cos) + cos] * Rotate_point.x) + ([U_Vec_Norm.z * U_Vec_Norm.x * (1 - cos) - U_Vec_Norm.z * sin] * Rotate_point.y) + ([U_Vec_Norm.x * U_Vec_Norm.z * (1 - cos) + U_Vec_Norm.y * sin] * Rotate_point.z)
-            geometry.attributes.position.array[vertex_coordinates[7]] = ([U_Vec_Norm.y * U_Vec_Norm.x * (1 - cos) + U_Vec_Norm.z * sin] * Rotate_point.x) + ([U_Vec_Norm.z * U_Vec_Norm.x * (1 - cos) + cos] * Rotate_point.y) + ([U_Vec_Norm.y * U_Vec_Norm.z * (1 - cos) - U_Vec_Norm.x * sin] * Rotate_point.z)
-            geometry.attributes.position.array[vertex_coordinates[8]] = -([U_Vec_Norm.z * U_Vec_Norm.x * (1 - cos) + U_Vec_Norm.y * sin] * Rotate_point.x) + ([U_Vec_Norm.y * U_Vec_Norm.z * (1 - cos) + U_Vec_Norm.x * sin] * Rotate_point.y) + ([U_Vec_Norm.z * U_Vec_Norm.z * (1 - cos) + cos] * Rotate_point.z)
-
+            for (let i = 0; i < 9; i += 3) {
+                geometry.attributes.position.array[vertex_coordinates[i]] = ([U_Vec_Norm.x * U_Vec_Norm.x * (1 - cos) + cos] * Rotate_point.x) + ([U_Vec_Norm.y * U_Vec_Norm.x * (1 - cos) - U_Vec_Norm.z * sin] * Rotate_point.y) + ([U_Vec_Norm.x * U_Vec_Norm.z * (1 - cos) + U_Vec_Norm.y * sin] * Rotate_point.z)
+                geometry.attributes.position.array[vertex_coordinates[i + 1]] = ([U_Vec_Norm.y * U_Vec_Norm.x * (1 - cos) + U_Vec_Norm.z * sin] * Rotate_point.x) + ([U_Vec_Norm.y * U_Vec_Norm.y * (1 - cos) + cos] * Rotate_point.y) + ([U_Vec_Norm.y * U_Vec_Norm.z * (1 - cos) - U_Vec_Norm.x * sin] * Rotate_point.z)
+                geometry.attributes.position.array[vertex_coordinates[i + 2]] = -([U_Vec_Norm.z * U_Vec_Norm.x * (1 - cos) + U_Vec_Norm.y * sin] * Rotate_point.x) + ([U_Vec_Norm.y * U_Vec_Norm.z * (1 - cos) + U_Vec_Norm.x * sin] * Rotate_point.y) + ([U_Vec_Norm.z * U_Vec_Norm.z * (1 - cos) + cos] * Rotate_point.z)
+            }
         }
         // Mark the buffer as needing an update
         geometry.attributes.position.needsUpdate = true;
@@ -264,9 +250,7 @@ const OrigamiPlane = ({ positionOrigami, rotationOrigami }) => {
 
     useFrame((state, delta) => {
         // Update the circular motion on each frame 
-
         if (doAnim1) {
-
             if (angle >= 0) {
                 // Stop further updates when the angle exceeds or reaches 180 degrees
                 updateCircularMotion(new THREE.Vector3(1, -1, 0), new THREE.Vector3(1, 1, 0), 2, [12, 13, 14, 21, 22, 23]);
@@ -286,7 +270,6 @@ const OrigamiPlane = ({ positionOrigami, rotationOrigami }) => {
             } else {
                 setGeometry(geometry);
                 moveOrigamiToCamera();
-
             }
         }
     });
