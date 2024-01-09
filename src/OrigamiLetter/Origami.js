@@ -4,7 +4,7 @@ import * as THREE from "three";
 import { TextureLoader } from "three";
 import gsap from "gsap";
 import { useLoader } from "@react-three/fiber/dist/react-three-fiber.cjs";
-import { useStateContext } from "../GlobalContext/StateContext";
+import { useStateContext } from "../globalContext/StateContext";
 import { Float } from "@react-three/drei";
 import { useThree } from "@react-three/fiber";
 
@@ -16,7 +16,6 @@ const Origami = ({ positionOrigami, texturePaths }) => {
     const texture = useLoader(TextureLoader, texturePaths);
     texture.repeat.set(0.5, 0.286)
     texture.offset.set(0, 0);
-    const { isLetterVisible, setIsLetterVisible } = useStateContext();
     const { camera } = useThree(); // Access to the camera
 
     // State to hold the rotation angle in degrees
@@ -27,7 +26,6 @@ const Origami = ({ positionOrigami, texturePaths }) => {
     const [rotationSpeedX, setRotationSpeedX] = useState(Math.random() * 0.02 + 0.005);
     const [rotationSpeedY, setRotationSpeedY] = useState(Math.random() * 0.02 + 0.005);
     const [rotationSpeedZ, setRotationSpeedZ] = useState(Math.random() * 0.02 + 0.005);
-
 
     useFrame(() => {
         if (isMoving === false) {
@@ -90,14 +88,12 @@ const Origami = ({ positionOrigami, texturePaths }) => {
     const planeShape = new THREE.Shape();
     configureShape(0, 0, width, height, radius, planeShape)
 
-
     useFrame(() => {
         gsap.to(materialRef.current, {
             opacity: 1,
             duration: 2.5,
         });
     }, []); // Empty dependency array ensures the effect runs only once on mount
-
 
     // Create geometry using the custom shape
     const geometry = new THREE.ShapeGeometry(planeShape);

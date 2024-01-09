@@ -4,20 +4,20 @@ import { Canvas } from "@react-three/fiber";
 import { Box } from '@mui/material';
 import { OrbitControls, Sparkles, Stars, Sky } from '@react-three/drei'; // Import OrbitControls and Stars for camera control and background stars
 import * as THREE from "three";
-import Origami from "./OrigamiLetter/Origami";
-import OrigamiPlane from "./OrigamiLetter/OrigamiPlane"
+import Origami from "./origamiLetter/Origami";
+import OrigamiPlane from "./origamiLetter/OrigamiPlane"
 import Camera from "./Camera";
 import { Stats } from "@react-three/drei";
-import { useStateContext } from "./GlobalContext/StateContext";
-import Menu from "./UI/Menu";
-import NonClickable from "./OrigamiLetter/NonClickable";
+import { useStateContext } from "./globalContext/StateContext";
+import Menu from "./ui/Menu";
+import NonClickable from "./origamiLetter/NonClickable";
 
 function Experience() {
     const { isLetterClicked, setIsLetterClicked } = useStateContext();
     const { isNonClickable, setINonClickable } = useStateContext();
     const { isLetterVisible, setIsLetterVisible } = useStateContext();
     const { isCameraMoving, setIsCameraMoving } = useStateContext();
-    const [cameraPosition, setCameraPosition] = useState([0, 1, 7]);
+    const [cameraPosition, setCameraPosition] = useState([0, 1, 10]);
     const [isRotationOrigami, setIsRotationOrigami] = useState([0, 0, 0])
     const texturePaths = [
         "/textures/05_anahanum.jpg",
@@ -121,7 +121,7 @@ function Experience() {
                 }}
                 camera={{
                     ref: { cameraRef },
-                    position: [0, 1, 7],
+                    position: [0, 1, 18],
                     rotation: [0, THREE.MathUtils.degToRad(0), 0],
                     fov: 100,
                     aspect: window.innerWidth / window.innerHeight,
@@ -151,8 +151,8 @@ function Experience() {
                 {isCameraMoving && (<Camera cameraPosition={cameraPosition} />)}
                 {/* Add camera controls */}
                 {/* <OrbitControls /> */}
-                {/* <Sky distance={450000} sunPosition={[10, -0.1, 0]} inclination={0} azimuth={0.5} /> */}
-                {/* < Stars
+                {/* <Sky distance={450000} sunPosition={[10, -0.1, 0]} inclination={0} azimuth={0.5} />
+                < Stars
                     saturation={0}
                     factor={4}
                 /> */}
