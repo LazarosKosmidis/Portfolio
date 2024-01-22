@@ -1,9 +1,8 @@
-import { useEffect } from "react";
 import * as THREE from "three";
-import { useFrame, useThree } from "@react-three/fiber";
+import { useFrame } from "@react-three/fiber";
 
 const Camera = ({ cameraPosition }) => {
-    const { camera } = useThree();
+    // const { camera } = useThree();
     const tempVec3 = new THREE.Vector3();
 
     // Update camera position on every frame

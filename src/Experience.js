@@ -1,8 +1,9 @@
 import React, { useRef, useState, useEffect, useCallback } from "react";
 
 import { Canvas } from "@react-three/fiber";
-import { Box } from '@mui/material';
-import { OrbitControls, Sparkles, Stars, Sky } from '@react-three/drei'; // Import OrbitControls and Stars for camera control and background stars
+import { Sparkles } from '@react-three/drei'; // Import OrbitControls and Stars for camera control and background stars
+
+// import { OrbitControls, Stars, Sky } from '@react-three/drei'; // Import OrbitControls and Stars for camera control and background stars
 import * as THREE from "three";
 import Origami from "./origamiLetter/Origami";
 import OrigamiPlane from "./origamiLetter/OrigamiPlane"
@@ -10,46 +11,45 @@ import Camera from "./Camera";
 import { Stats } from "@react-three/drei";
 import { useStateContext } from "./globalContext/StateContext";
 import Menu from "./ui/Menu";
-import NonClickable from "./origamiPlanerigamiLetter/NonClickable";
+import NonClickable from "./origamiLetter/NonClickable";
 
 function Experience() {
-    const { isLetterClicked, setIsLetterClicked } = useStateContext();
-    const { isNonClickable, setINonClickable } = useStateContext();
-    const { isLetterVisible, setIsLetterVisible } = useStateContext();
-    const { isCameraMoving, setIsCameraMoving } = useStateContext();
-    const [cameraPosition, setCameraPosition] = useState([0, 1, 10]);
+    const { isLetterClicked } = useStateContext();
+    const { isNonClickable } = useStateContext();
+    const { isLetterVisible } = useStateContext();
+    const { isCameraMoving } = useStateContext();
+    const [cameraPosition, setCameraPosition] = useState([0, 1, 8]);
     const [isRotationOrigami, setIsRotationOrigami] = useState([0, 0, 0])
     const texturePaths = [
         "/textures/05_anahanum.jpg",
+        "/textures/07_angelina_bagdasaryan.jpg",
+        "/textures/13_daniil_protasov.jpg",
+        "/textures/22_alla_dimareva.jpg",
+        "/textures/24_alla_dimareva.jpg",
         "/textures/26_arina_kashchavtseva.jpg",
         "/textures/49_angelina_bagdasaryan.jpg",
-        "/textures/24_alla_dimareva.jpg",
-        "/textures/22_alla_dimareva.jpg",
-        "/textures/13_daniil_protasov.jpg",
-        "/textures/07_angelina_bagdasaryan.jpg"
-
     ]
     // const [isPositionOrigami, setIsPositionOrigami] = useState();
     // const [isPositionOrigami1, setIsPositionOrigami1] = useState([-2, 2.5, 0]);
     // const [isPositionOrigami2, setIsPositionOrigami2] = useState([-1.5, -1.5, 0]);
     let positionOrigamies = []
     const startingPos = 0
-    let y = -20;
-    let x = -10
+    let y = -30;
+    let x = -25
     for (let i = 0; i < 50; i++) {
 
         if (i % 5 === 0) {
             y += 4
-            x = -10
+            x = -15
         }
         positionOrigamies.push([startingPos + x, startingPos + y, startingPos])
-        x += 4
+        x += 7
     }
 
     let rotationOrigamies = []
     function setRotation() {
-        const min = -1;
-        const max = 1;
+        const min = -0.5;
+        const max = 0.5;
         for (let i = 0; i < 50; i++) {
             const rotationX = Math.random() * (max - min) + min;
             const rotationY = Math.random() * (max - min) + min;
@@ -141,7 +141,7 @@ function Experience() {
                 <ambientLight intensity={0.5} />
                 <pointLight position={[10, 10, 10]} />
 
-                {isLetterClicked && (<Origami texturePaths={texturePaths[Math.floor(Math.random() * (6))]} />)}
+                {isLetterClicked && (<Origami texturePaths={texturePaths[Math.floor(Math.random() * (2))]} />)}
 
                 {isLetterVisible && positionOrigamies.map((position, index) => (
                     <OrigamiPlane key={index} positionOrigami={positionOrigamies[index]} rotationOrigami={isRotationOrigami[index]} />

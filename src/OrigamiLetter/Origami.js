@@ -1,10 +1,9 @@
 import { useFrame } from "@react-three/fiber";
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState } from "react";
 import * as THREE from "three";
 import { TextureLoader } from "three";
 import gsap from "gsap";
 import { useLoader } from "@react-three/fiber/dist/react-three-fiber.cjs";
-import { Float } from "@react-three/drei";
 import { useThree } from "@react-three/fiber";
 
 const Origami = ({ positionOrigami, texturePaths }) => {
@@ -16,7 +15,6 @@ const Origami = ({ positionOrigami, texturePaths }) => {
     texture.repeat.set(0.5, 0.286)
     texture.offset.set(0, 0);
     const { camera } = useThree(); // Access to the camera
-
     // State to hold the rotation angle in degrees
     const [rotationAngleX, setRotationAngleX] = useState(0);
     const [rotationAngleY, setRotationAngleY] = useState(0);
@@ -25,7 +23,7 @@ const Origami = ({ positionOrigami, texturePaths }) => {
     const [rotationSpeedX, setRotationSpeedX] = useState(Math.random() * 0.02 + 0.005);
     const [rotationSpeedY, setRotationSpeedY] = useState(Math.random() * 0.02 + 0.005);
     const [rotationSpeedZ, setRotationSpeedZ] = useState(Math.random() * 0.02 + 0.005);
-
+    console.log(texturePaths);
     useFrame(() => {
         if (isMoving === false) {
             setRotationAngleX((prevAngle) => THREE.MathUtils.lerp(prevAngle, 0, 0.1));

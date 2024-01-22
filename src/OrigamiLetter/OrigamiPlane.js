@@ -1,10 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useFrame } from "@react-three/fiber";
-import { BoxGeometry, SphereGeometry } from "three";
 import { useStateContext } from "../globalContext/StateContext.js";
 import { TextureLoader } from "three";
 import { useLoader } from "@react-three/fiber";
-import { Float, Html } from "@react-three/drei";
+import { Float } from "@react-three/drei";
 import gsap from "gsap";
 import * as THREE from "three";
 import { useThree } from "@react-three/fiber";
@@ -159,7 +158,7 @@ const OrigamiPlane = ({ positionOrigami, rotationOrigami }) => {
 
     const handlePointerOver = () => {
 
-        if (!isOrigamiClicked) {
+        if (!isOrigamiClicked && planeRef.current.position.z < 3) {
             gsap.to(planeRef.current.position, {
                 z: planeRef.current.position.z + 0.5,
                 duration: 0.5,
@@ -177,7 +176,7 @@ const OrigamiPlane = ({ positionOrigami, rotationOrigami }) => {
     const handlePointerOut = () => {
         document.body.style.cursor = "auto";
         console.log(isOrigamiClicked);
-        if (!isOrigamiClicked) {
+        if (!isOrigamiClicked && planeRef.current.position.z > -2) {
             gsap.to(planeRef.current.position, {
                 z: planeRef.current.position.z - 0.5,
                 duration: 0.5,
@@ -189,24 +188,12 @@ const OrigamiPlane = ({ positionOrigami, rotationOrigami }) => {
                 duration: 0.5,
             })
         }
-
-
-
-
-        // gsap.to(planeRef.current.position, {
-        //     x: positionOrigami[0],
-        //     y: positionOrigami[1],
-        //     z: positionOrigami[2],
-        //     duration: 0.5,
-        // })
     };
-
-
 
     // Calculate initial angle for circular motion
     let angle = startingAngle
-    const angularSpeed = 0.02; // Adjust the angular speed as needed
-    const maxAngle = 2 * Math.PI; // 180 degrees in radians
+    // const angularSpeed = 0.02; // Adjust the angular speed as needed
+    // const maxAngle = 2 * Math.PI; // 180 degrees in radians
 
     const moveOrigamiToCamera = (() => {
         if (isOrigamiClicked) {
@@ -276,7 +263,12 @@ const OrigamiPlane = ({ positionOrigami, rotationOrigami }) => {
 
     return (
         <group>
-            <Float>
+            <Float
+                speed={0.6}
+                rotationIntensity={1}
+                floatIntensity={5}
+                floatingRange={[-0.1, -0.1]}
+            >
                 <mesh
                     ref={planeRef}
                     geometry={geometry}
