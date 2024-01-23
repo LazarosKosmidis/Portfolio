@@ -6,6 +6,7 @@ function StateProvider(props) {
     const [isLetterVisible, setIsLetterVisible] = useState(true)
     const [isCameraMoving, setIsCameraMoving] = useState(true)
     const [isNonClickable, setINonClickable] = useState(false)
+    const [origamiIndex, setOrigamiIndex] = useState(null)
     return (
         <StateContext.Provider
             value={{
@@ -17,6 +18,8 @@ function StateProvider(props) {
                 setIsCameraMoving: setIsCameraMoving,
                 isNonClickable: isNonClickable,
                 setINonClickable: setINonClickable,
+                origamiIndex: origamiIndex,
+                setOrigamiIndex: setOrigamiIndex,
             }}
 
         >

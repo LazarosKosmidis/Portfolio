@@ -18,8 +18,9 @@ function Experience() {
     const { isNonClickable } = useStateContext();
     const { isLetterVisible } = useStateContext();
     const { isCameraMoving } = useStateContext();
-    const [cameraPosition, setCameraPosition] = useState([0, 1, 8]);
+    const [cameraPosition, setCameraPosition] = useState([0, 0, 8]);
     const [isRotationOrigami, setIsRotationOrigami] = useState([0, 0, 0])
+    const { origamiIndex } = useStateContext()
     const texturePaths = [
         "/textures/05_anahanum.jpg",
         "/textures/07_angelina_bagdasaryan.jpg",
@@ -28,21 +29,26 @@ function Experience() {
         "/textures/24_alla_dimareva.jpg",
         "/textures/26_arina_kashchavtseva.jpg",
         "/textures/49_angelina_bagdasaryan.jpg",
+        "/textures/01.jpg",
+        "/textures/22_angelina_bagdasaryan.jpg",
+        "/textures/10_Еременко-Э.А..jpg",
+        "/textures/05_alla_dimareva.jpg",
+        "/textures/26_irina_chigrinova.jpg",
     ]
     // const [isPositionOrigami, setIsPositionOrigami] = useState();
     // const [isPositionOrigami1, setIsPositionOrigami1] = useState([-2, 2.5, 0]);
     // const [isPositionOrigami2, setIsPositionOrigami2] = useState([-1.5, -1.5, 0]);
     let positionOrigamies = []
     const startingPos = 0
-    let y = -30;
+    let y = -5;
     let x = -25
-    for (let i = 0; i < 50; i++) {
+    for (let i = 0; i < 12; i++) {
 
         if (i % 5 === 0) {
             y += 4
             x = -15
         }
-        positionOrigamies.push([startingPos + x, startingPos + y, startingPos])
+        positionOrigamies.push([startingPos + x, startingPos + y, startingPos, i])
         x += 7
     }
 
@@ -129,6 +135,7 @@ function Experience() {
                     far: 1000,
 
                 }}
+
                 onWheel={moveCamera}
                 gl={{
                     antialias: true,
@@ -141,7 +148,7 @@ function Experience() {
                 <ambientLight intensity={0.5} />
                 <pointLight position={[10, 10, 10]} />
 
-                {isLetterClicked && (<Origami texturePaths={texturePaths[Math.floor(Math.random() * (2))]} />)}
+                {isLetterClicked && (<Origami texturePaths={texturePaths[origamiIndex]} />)}
 
                 {isLetterVisible && positionOrigamies.map((position, index) => (
                     <OrigamiPlane key={index} positionOrigami={positionOrigamies[index]} rotationOrigami={isRotationOrigami[index]} />

@@ -1,6 +1,7 @@
 import { useFrame } from "@react-three/fiber";
 import React, { useRef, useState } from "react";
 import * as THREE from "three";
+import { useStateContext } from "../globalContext/StateContext.js";
 import { TextureLoader } from "three";
 import gsap from "gsap";
 import { useLoader } from "@react-three/fiber/dist/react-three-fiber.cjs";
@@ -11,6 +12,8 @@ const Origami = ({ positionOrigami, texturePaths }) => {
     const materialRef = useRef();
     const group = useRef();
     const [isMoving, setisMoving] = useState(true)
+    const { origamiIndex, setOrigamiIndex } = useStateContext()
+
     const texture = useLoader(TextureLoader, texturePaths);
     texture.repeat.set(0.5, 0.286)
     texture.offset.set(0, 0);
@@ -19,11 +22,10 @@ const Origami = ({ positionOrigami, texturePaths }) => {
     const [rotationAngleX, setRotationAngleX] = useState(0);
     const [rotationAngleY, setRotationAngleY] = useState(0);
     const [rotationAngleZ, setRotationAngleZ] = useState(0);
-
     const [rotationSpeedX, setRotationSpeedX] = useState(Math.random() * 0.02 + 0.005);
     const [rotationSpeedY, setRotationSpeedY] = useState(Math.random() * 0.02 + 0.005);
     const [rotationSpeedZ, setRotationSpeedZ] = useState(Math.random() * 0.02 + 0.005);
-    console.log(texturePaths);
+
     useFrame(() => {
         if (isMoving === false) {
             setRotationAngleX((prevAngle) => THREE.MathUtils.lerp(prevAngle, 0, 0.1));

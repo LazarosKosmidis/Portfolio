@@ -5,6 +5,7 @@ export const StateContext = createContext({
     isLetterVisible: true,
     isCameraMoving: true,
     isNonClickable: false,
+    origamiIndex: null,
 });
 
 export const useStateContext = () => useContext(StateContext);

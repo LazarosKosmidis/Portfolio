@@ -13,6 +13,7 @@ const OrigamiPlane = ({ positionOrigami, rotationOrigami }) => {
     const { setIsLetterClicked } = useStateContext();
     const { setIsLetterVisible } = useStateContext();
     const { setINonClickable } = useStateContext();
+    const { setOrigamiIndex } = useStateContext()
 
     const { setIsCameraMoving } = useStateContext();
     const [isOrigamiClicked, setIsOrigamiClicked] = useState(false);
@@ -175,7 +176,6 @@ const OrigamiPlane = ({ positionOrigami, rotationOrigami }) => {
 
     const handlePointerOut = () => {
         document.body.style.cursor = "auto";
-        console.log(isOrigamiClicked);
         if (!isOrigamiClicked && planeRef.current.position.z > -2) {
             gsap.to(planeRef.current.position, {
                 z: planeRef.current.position.z - 0.5,
@@ -198,9 +198,9 @@ const OrigamiPlane = ({ positionOrigami, rotationOrigami }) => {
     const moveOrigamiToCamera = (() => {
         if (isOrigamiClicked) {
             gsap.to(planeRef.current.position, {
-                x: camera.position.x,
+                x: camera.position.x - 3,
                 y: camera.position.y,
-                z: camera.position.z - 2,
+                z: camera.position.z - 5,
                 duration: 1.5,
             })
         }
@@ -289,6 +289,7 @@ const OrigamiPlane = ({ positionOrigami, rotationOrigami }) => {
                         onPointerOver={handlePointerOver}
                         onPointerOut={handlePointerOut}
                         onClick={() => {
+                            setOrigamiIndex(positionOrigami[3])
                             document.body.style.cursor = "auto";
                             setINonClickable(true)
                             setIsOrigamiClicked(true)
