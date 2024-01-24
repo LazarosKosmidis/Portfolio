@@ -12,7 +12,7 @@ import { Stats } from "@react-three/drei";
 import { useStateContext } from "./globalContext/StateContext";
 import Menu from "./ui/Menu";
 import NonClickable from "./origamiLetter/NonClickable";
-
+import OrigamiInfoDetails from "./ui/OrigamiInfoDetails";
 function Experience() {
     const { isLetterClicked } = useStateContext();
     const { isNonClickable } = useStateContext();
@@ -74,14 +74,16 @@ function Experience() {
     const touchStart = useRef(new THREE.Vector2())
     // Event handler for mouse wheel
     function moveCamera(e) {
-        const newCameraPosition = [...cameraPosition];
-        newCameraPosition[1] -= e.deltaY * wheelSensitivity; // Adjust this value for the desired scroll speed
-        if (newCameraPosition[1] <= -10) {
-            newCameraPosition[1] = -10;
-        } else if (newCameraPosition[1] >= 10) {
-            newCameraPosition[1] = 10;
+        if (isCameraMoving === true) {
+            const newCameraPosition = [...cameraPosition];
+            newCameraPosition[1] -= e.deltaY * wheelSensitivity; // Adjust this value for the desired scroll speed
+            if (newCameraPosition[1] <= -10) {
+                newCameraPosition[1] = -10;
+            } else if (newCameraPosition[1] >= 10) {
+                newCameraPosition[1] = 10;
+            }
+            setCameraPosition(newCameraPosition);
         }
-        setCameraPosition(newCameraPosition);
     }
 
     useEffect(() => {
@@ -155,7 +157,7 @@ function Experience() {
                 ))}
 
                 {/* {isLetterVisible && (<OrigamiPlane positionOrigami={positionOrigamies[0]} rotationOrigami={isRotationOrigami} />)} */}
-                {isCameraMoving && (<Camera cameraPosition={cameraPosition} />)}
+                <Camera cameraPosition={cameraPosition} />
                 {/* Add camera controls */}
                 {/* <OrbitControls /> */}
                 {/* <Sky distance={450000} sunPosition={[10, -0.1, 0]} inclination={0} azimuth={0.5} />
@@ -177,6 +179,7 @@ function Experience() {
                 <Stats />
             </Canvas>
             <Menu />
+            <OrigamiInfoDetails />
             {isNonClickable && <NonClickable />}
 
         </div>

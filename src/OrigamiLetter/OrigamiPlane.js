@@ -10,6 +10,7 @@ import { useThree } from "@react-three/fiber";
 const OrigamiPlane = ({ positionOrigami, rotationOrigami }) => {
     const planeRef = useRef();
     const sphereCollider = useRef();
+    const materialRef = useRef();
     const { setIsLetterClicked } = useStateContext();
     const { setIsLetterVisible } = useStateContext();
     const { setINonClickable } = useStateContext();
@@ -140,6 +141,7 @@ const OrigamiPlane = ({ positionOrigami, rotationOrigami }) => {
     useEffect(() => {
         // Update the circular motion on each frame
         createGeometry();
+        handleOpacity();
         if (!isOrigamiClicked) return;
 
         setDoAnim1(true);
@@ -195,12 +197,19 @@ const OrigamiPlane = ({ positionOrigami, rotationOrigami }) => {
     // const angularSpeed = 0.02; // Adjust the angular speed as needed
     // const maxAngle = 2 * Math.PI; // 180 degrees in radians
 
+    const handleOpacity = () => {
+        gsap.to(materialRef.current, {
+            opacity: 1,
+            duration: 2,
+        })
+    };
+
     const moveOrigamiToCamera = (() => {
         if (isOrigamiClicked) {
             gsap.to(planeRef.current.position, {
                 x: camera.position.x - 3,
                 y: camera.position.y,
-                z: camera.position.z - 5,
+                z: camera.position.z - 2,
                 duration: 1.5,
             })
         }
@@ -277,9 +286,11 @@ const OrigamiPlane = ({ positionOrigami, rotationOrigami }) => {
                     rotation={rotationOrigami}
                 >
                     <meshBasicMaterial
+                        ref={materialRef}
                         side={2}
                         map={texture}
                         transparent={true}
+                        opacity={0}
                     // wireframe={true}
                     />
                     <mesh
