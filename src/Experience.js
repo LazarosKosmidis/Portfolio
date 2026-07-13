@@ -1,5 +1,4 @@
 import React, { useRef, useState, useEffect, useCallback } from "react";
-
 import { Canvas } from "@react-three/fiber";
 import { Sparkles } from '@react-three/drei'; // Import OrbitControls and Stars for camera control and background stars
 
@@ -16,7 +15,6 @@ function Experience() {
     const { isLetterClicked } = useStateContext();
     const { isNonClickable } = useStateContext();
     const { isLetterVisible } = useStateContext();
-    const { isCameraMoving } = useStateContext();
     const origamiTextures = [
         "/textures/linkdin_logo.png",
         "/textures/resume_logo.png",
@@ -39,48 +37,23 @@ function Experience() {
         [0, 1.5, 1, 1],
         [3, -2.5, 1, 2],
     ];
-    const startingPos = 0
-    let y = -5;
-    let x = -25
-    // for (let i = 0; i < 3; i++) {
+    
 
-    //     if (i % 5 === 0) {
-    //         y += 4
-    //         x = -15
-    //     }
-    //     positionOrigamies.push([startingPos + x, startingPos + y, startingPos, i])
-    //     x += 7
-    // }
-
-    let rotationOrigamies = []
-    function setRotation() {
-    setIsRotationOrigami([
-            [0, 0, 0],
-            [0, 0, 0],
-            [0, 0, 0],
-        ]);
-    }
+    
+    
     useEffect(() => {
-        setRotation();
-    }, [])
-    // setIsPositionOrigami(positionOrigamies)
-    const cameraRef = useRef();
+    setIsRotationOrigami([
+        [0, 0, 0],
+        [0, 0, 0],
+        [0, 0, 0],
+    ]);
+}, []);
+    
+    
 
-    const wheelSensitivity = 0.0015;
     const touchStart = useRef(new THREE.Vector2())
     // Event handler for mouse wheel
-    function moveCamera(e) {
-        if (isCameraMoving === true) {
-            const newCameraPosition = [...cameraPosition];
-            newCameraPosition[1] -= e.deltaY * wheelSensitivity; // Adjust this value for the desired scroll speed
-            if (newCameraPosition[1] <= -10) {
-                newCameraPosition[1] = -10;
-            } else if (newCameraPosition[1] >= 10) {
-                newCameraPosition[1] = 10;
-            }
-            setCameraPosition(newCameraPosition);
-        }
-    }
+    
 
     useEffect(() => {
         // Add touch screen swipe event listeners
@@ -124,14 +97,12 @@ function Experience() {
                     background: "black",
                 }}
                 camera={{
-                    ref: { cameraRef },
                     position: [0, 1, 8],
                     rotation: [0, THREE.MathUtils.degToRad(0), 0],
                     fov: 75,
                     aspect: window.innerWidth / window.innerHeight,
                     near: 0.1,
                     far: 1000,
-
                 }}
 
                 // onWheel={moveCamera}
@@ -149,7 +120,7 @@ function Experience() {
                 {isLetterClicked && (<Origami texturePaths={texturePaths[origamiIndex]} />)}
 
                 {isLetterVisible &&
-                    positionOrigamies.map((position, index) => (
+                    positionOrigamies.map((_, index) => (
                         <OrigamiPlane
                             key={index}
                             positionOrigami={positionOrigamies[index]}
