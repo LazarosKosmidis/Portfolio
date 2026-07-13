@@ -7,7 +7,7 @@ import * as THREE from "three";
 import Origami from "./origamiLetter/Origami";
 import OrigamiPlane from "./origamiLetter/OrigamiPlane"
 import Camera from "./Camera";
-import { useStateContext } from "./globalContext/StateContext";
+import { useStateContext } from "./GlobalContext/StateContext";
 import Menu from "./ui/Menu";
 import NonClickable from "./origamiLetter/NonClickable";
 import OrigamiInfoDetails from "./ui/OrigamiInfoDetails";

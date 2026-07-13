@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
-import { useStateContext } from "./globalContext/StateContext";
+import { useStateContext } from "./GlobalContext/StateContext";
 
 
 const Camera = ({ cameraPosition }) => {
