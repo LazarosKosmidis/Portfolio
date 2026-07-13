@@ -154,10 +154,18 @@ function Experience() {
             <Menu />
             <OrigamiInfoDetails />
             {isNonClickable && <NonClickable />}
-            <div className="portfolio-info">
+            <div className={`portfolio-info ${isLetterClicked ? "hide" : ""}`}>
                 <h2>Lazaros Kosmidis</h2>
+
                 <p>Software Engineer</p>
-                 <span>lazaroskosmidis@gmail.com</span>
+
+                <span>lazaros.kosmidis99@gmail.com</span>
+
+                <div className="portfolio-hint">
+                    Click an origami to explore my portfolio
+                    <br />
+                    Resume • GitHub • LinkedIn
+                </div>
             </div>
         </div>
     );

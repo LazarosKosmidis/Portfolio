@@ -14,6 +14,7 @@ const OrigamiPlane = ({
     const planeRef = useRef();
     const sphereCollider = useRef();
     const materialRef = useRef();
+    const baseZ = useRef(positionOrigami[2]);
     const { setIsLetterClicked } = useStateContext();
     const { setIsLetterVisible } = useStateContext();
     const { setIsNonClickable } = useStateContext();
@@ -161,34 +162,48 @@ const OrigamiPlane = ({
 
     const handlePointerOver = () => {
 
+        gsap.killTweensOf(planeRef.current.position);
+        gsap.killTweensOf(planeRef.current.rotation);
+
         if (!isOrigamiClicked && planeRef.current.position.z < 3) {
+
             gsap.to(planeRef.current.position, {
-                z: planeRef.current.position.z + 0.5,
+                z: baseZ.current + 1,
                 duration: 0.5,
-            })
+            });
+
             gsap.to(planeRef.current.rotation, {
                 x: 0,
                 y: 0,
                 z: 0,
                 duration: 0.3,
-            })
+            });
+            
         }
+
         document.body.style.cursor = "pointer";
     };
 
     const handlePointerOut = () => {
+
+        gsap.killTweensOf(planeRef.current.position);
+        gsap.killTweensOf(planeRef.current.rotation);
+
         document.body.style.cursor = "auto";
+
         if (!isOrigamiClicked && planeRef.current.position.z > -2) {
+
             gsap.to(planeRef.current.position, {
-                z: planeRef.current.position.z - 0.5,
+                z: baseZ.current,
                 duration: 0.5,
-            })
+            });
+
             gsap.to(planeRef.current.rotation, {
                 x: rotationOrigami[0],
                 y: rotationOrigami[1],
                 z: rotationOrigami[2],
                 duration: 0.5,
-            })
+            });
         }
     };
 
@@ -207,10 +222,11 @@ const OrigamiPlane = ({
     const moveOrigamiToCamera = (() => {
         if (isOrigamiClicked) {
             gsap.to(planeRef.current.position, {
-                x: camera.position.x - 3,
-                y: camera.position.y,
+                x: camera.position.x - 1,
+                y: camera.position.y - 1,
                 z: camera.position.z - 2,
                 duration: 1.5,
+                ease: "power2.out"
             })
         }
     })
