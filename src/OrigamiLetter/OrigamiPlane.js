@@ -141,26 +141,23 @@ const OrigamiPlane = ({
 
     }
 
-    useEffect(() => {
-        // Update the circular motion on each frame
-        createGeometry();
-        handleOpacity();
-        if (!isOrigamiClicked) return;
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        useEffect(() => {
+            createGeometry();
+            handleOpacity();
 
-        setDoAnim1(true);
+            if (!isOrigamiClicked) return;
 
-        setStartingAngle(Math.PI)
-        // moveOrigamiToCamera();
-    }, [isOrigamiClicked]);
+            setDoAnim1(true);
+            setStartingAngle(Math.PI);
+        }, [isOrigamiClicked]);
 
-    useEffect(() => {
-        // Update the circular motion on each frame
-        if (doCreate1 === false) {
-            return;
-        }
-        createNewGeometry(geometry, 1, 1);
-        // setDoAnim2(true)
-    }, [doCreate1,]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        useEffect(() => {
+            if (doCreate1 === false) return;
+
+            createNewGeometry(geometry, 1, 1);
+        }, [doCreate1]);
 
     const handlePointerOver = () => {
 
