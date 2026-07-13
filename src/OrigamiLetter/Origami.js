@@ -12,7 +12,7 @@ const Origami = ({ positionOrigami, texturePaths }) => {
     const materialRef = useRef();
     const group = useRef();
     const [isMoving, setisMoving] = useState(true)
-    const { origamiIndex, setOrigamiIndex } = useStateContext()
+    const { origamiIndex } = useStateContext()
 
     const texture = useLoader(TextureLoader, texturePaths);
     texture.repeat.set(0.5, 0.286)

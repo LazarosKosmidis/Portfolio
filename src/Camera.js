@@ -6,7 +6,7 @@ import { useStateContext } from "./GlobalContext/StateContext";
 const Camera = ({ cameraPosition }) => {
     // const { camera } = useThree();
     const tempVec3 = new THREE.Vector3();
-    const { isLetterClicked, setIsLetterClicked } = useStateContext();
+    const { isLetterClicked } = useStateContext();
     // Update camera position on every frame
     useFrame(({ camera }) => {
         if (isLetterClicked) {
