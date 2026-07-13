@@ -33,9 +33,9 @@ function Experience() {
     // const [isPositionOrigami1, setIsPositionOrigami1] = useState([-2, 2.5, 0]);
     // const [isPositionOrigami2, setIsPositionOrigami2] = useState([-1.5, -1.5, 0]);
     const positionOrigamies = [
-        [-3, -2.5, 1, 0],
-        [0, 1.5, 1, 1],
-        [3, -2.5, 1, 2],
+        [-4, -2.5, 1, 0],
+        [-1, 1.5, 1, 1],
+        [2, -2.5, 1, 2],
     ];
     
 
