@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from "react";
 import { Box } from "@mui/system";
-import { useStateContext } from "../globalContext/StateContext.js";
+import { useStateContext } from "../GlobalContext/StateContext.js";
 import gsap from "gsap";
 
 const OrigamiInfoDetails = () => {

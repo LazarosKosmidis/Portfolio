@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useFrame } from "@react-three/fiber";
-import { useStateContext } from "../globalContext/StateContext.js";
+import { useStateContext } from "../GlobalContext/StateContext.js";
 import { TextureLoader } from "three";
 import { useLoader } from "@react-three/fiber";
 import { Float } from "@react-three/drei";
