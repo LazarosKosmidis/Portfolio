@@ -99,17 +99,76 @@ const Origami = ({ positionOrigami, texturePaths }) => {
 
     // This will run every frame
     return (
-        <group ref={group} position={[camera.position.x - 3, camera.position.y - 0.5, camera.position.z - 3]}>
-            <mesh
-                geometry={geometry}
-                position={[-1, -1.3, 0.8]}
-                onPointerOver={() => setisMoving(false)}
-                onPointerLeave={() => setisMoving(true)}
-            >
-                <meshBasicMaterial ref={materialRef} map={texture} transparent={true} opacity={0} />
-            </mesh>
-        </group>
-    );
+    <group
+        ref={group}
+        position={[
+            camera.position.x - 3,
+            camera.position.y - 0.5,
+            camera.position.z - 5,
+        ]}
+    >
+        <mesh
+            geometry={geometry}
+            position={[-1, -1.3, 0.8]}
+            onPointerOver={(e) => {
+                setisMoving(false);
+                document.body.style.cursor = "pointer";
+
+                gsap.to(e.object.scale, {
+                    x: 1.03,
+                    y: 1.03,
+                    z: 1.03,
+                    duration: 0.25,
+                });
+            }}
+            onPointerOut={(e) => {
+                setisMoving(true);
+                document.body.style.cursor = "default";
+
+                gsap.to(e.object.scale, {
+                    x: 1,
+                    y: 1,
+                    z: 1,
+                    duration: 0.25,
+                });
+            }}
+            onClick={() => {
+                switch (origamiIndex) {
+                    case 0:
+                        window.open(
+                            "https://www.linkedin.com/in/lazaroskosmidis/",
+                            "_blank"
+                        );
+                        break;
+
+                    case 1:
+                        window.open(
+                            "/textures/LAZAROS_KOSMIDIS_CV.pdf",
+                            "_blank"
+                        );
+                        break;
+
+                    case 2:
+                        window.open(
+                            "https://github.com/LazarosKosmidis",
+                            "_blank"
+                        );
+                        break;
+
+                    default:
+                        break;
+                }
+            }}
+        >
+            <meshBasicMaterial
+                ref={materialRef}
+                map={texture}
+                transparent
+                opacity={0}
+            />
+        </mesh>
+    </group>
+);
 };
 
 export default Origami;

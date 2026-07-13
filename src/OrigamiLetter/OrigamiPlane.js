@@ -7,13 +7,17 @@ import { Float } from "@react-three/drei";
 import gsap from "gsap";
 import * as THREE from "three";
 import { useThree } from "@react-three/fiber";
-const OrigamiPlane = ({ positionOrigami, rotationOrigami }) => {
+const OrigamiPlane = ({
+        positionOrigami,
+        rotationOrigami,
+        texturePath,
+    }) => {
     const planeRef = useRef();
     const sphereCollider = useRef();
     const materialRef = useRef();
     const { setIsLetterClicked } = useStateContext();
     const { setIsLetterVisible } = useStateContext();
-    const { setINonClickable } = useStateContext();
+    const { setIsNonClickable } = useStateContext();
     const { setOrigamiIndex } = useStateContext()
 
     const { setIsCameraMoving } = useStateContext();
@@ -28,7 +32,7 @@ const OrigamiPlane = ({ positionOrigami, rotationOrigami }) => {
     const [startingAngle, setStartingAngle] = useState(0)
     const [shpereColliderPos, setSphereColliderPos] = useState([1.0, 0.3, 0])
 
-    const texture = useLoader(TextureLoader, "/textures/text24.png");
+    const texture = useLoader(TextureLoader, texturePath);
 
     const geometryWidth = 1
     const geometryHeight = 2
@@ -272,12 +276,7 @@ const OrigamiPlane = ({ positionOrigami, rotationOrigami }) => {
 
     return (
         <group>
-            <Float
-                speed={0.6}
-                rotationIntensity={1}
-                floatIntensity={5}
-                floatingRange={[-0.1, -0.1]}
-            >
+            
                 <mesh
                     ref={planeRef}
                     geometry={geometry}
@@ -302,12 +301,12 @@ const OrigamiPlane = ({ positionOrigami, rotationOrigami }) => {
                         onClick={() => {
                             setOrigamiIndex(positionOrigami[3])
                             document.body.style.cursor = "auto";
-                            setINonClickable(true)
+                            setIsNonClickable(true)
                             setIsOrigamiClicked(true)
                             // handlePointerOut();
                             handlePointerOver();
                             setTimeout(() => {
-                                setINonClickable(false);
+                                setIsNonClickable(false);
                                 setIsLetterClicked((prev) => !prev);
                                 setIsLetterVisible((prev) => !prev);
                             }, 1500);
@@ -326,7 +325,7 @@ const OrigamiPlane = ({ positionOrigami, rotationOrigami }) => {
                         />
                     </mesh>
                 </mesh>
-            </Float>
+            
         </group >
 
     );

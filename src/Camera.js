@@ -10,7 +10,7 @@ const Camera = ({ cameraPosition }) => {
     // Update camera position on every frame
     useFrame(({ camera }) => {
         if (isLetterClicked) {
-            camera.position.lerp(tempVec3.set(cameraPosition[0], cameraPosition[1], cameraPosition[2] + 5), 0.03);
+            // camera.position.lerp(tempVec3.set(cameraPosition[0], cameraPosition[1], cameraPosition[2] + 5), 0.03);
 
         }
         else {

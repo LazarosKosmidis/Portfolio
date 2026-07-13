@@ -1,48 +1,60 @@
-import React, { useRef } from "react";
+import React from "react";
 import { useStateContext } from "../globalContext/StateContext.js";
-import { IconButton, Box } from "@mui/material";
+import { IconButton } from "@mui/material";
 import ClearIcon from "@mui/icons-material/Clear";
+
 const Menu = () => {
-    const planeRef = useRef();
-    const { isLetterClicked, setIsLetterClicked } = useStateContext();
-    const { isLetterVisible, setIsLetterVisible } = useStateContext();
-    const { isCameraMoving, setIsCameraMoving } = useStateContext();
+    const {
+        isLetterClicked,
+        setIsLetterClicked,
+        setIsLetterVisible,
+        setIsCameraMoving,
+    } = useStateContext();
 
     return (
         <>
-            {isLetterClicked && (<Box sx={{ border: "1px solid white" }}>
-                < IconButton
-                    size={"large"}
+            {isLetterClicked && (
+                <IconButton
+                    size="large"
                     sx={{
                         position: "fixed",
                         top: "5%",
                         left: "50%",
                         transform: "translate(-50%, -50%)",
-                        opacity: 1, // Set opacity to 1 for visibility
-                        borderRadius: 0,
-                        background: "white",
-                        color: "black",
-                        minWidth: "fit-content",
+
+                        width: 58,
+                        height: 58,
+
+                        borderRadius: "50%",
+
+                        background: "rgba(20,20,20,0.55)",
+                        backdropFilter: "blur(10px)",
+                        border: "1px solid rgba(255,255,255,0.18)",
+
+                        color: "white",
                         zIndex: 3,
-                        "&:hover": { backgroundColor: "white" },
-                        marginRight: "65px",
+
+                        transition: "all 0.25s ease",
+
+                        "&:hover": {
+                            background: "rgba(255,255,255,0.12)",
+                            border: "1px solid rgba(255,179,71,0.6)",
+                            color: "#ffb347",
+                            transform: "translate(-50%, -50%) scale(1.08)",
+                            boxShadow: "0 0 18px rgba(255,179,71,0.35)",
+                        },
                     }}
                     onClick={() => {
-                        setIsLetterClicked(false)
-                        setIsLetterVisible(true)
-                        setIsCameraMoving(true)
+                        setIsLetterClicked(false);
+                        setIsLetterVisible(true);
+                        setIsCameraMoving(true);
                     }}
                 >
-
-                    <ClearIcon sx={{ fontSize: "30px" }} />
-                </IconButton >
-
-            </Box>)}
+                    <ClearIcon sx={{ fontSize: 32 }} />
+                </IconButton>
+            )}
         </>
-
     );
 };
 
 export default Menu;
-
-

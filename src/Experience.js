@@ -8,7 +8,6 @@ import * as THREE from "three";
 import Origami from "./origamiLetter/Origami";
 import OrigamiPlane from "./origamiLetter/OrigamiPlane"
 import Camera from "./Camera";
-import { Stats } from "@react-three/drei";
 import { useStateContext } from "./globalContext/StateContext";
 import Menu from "./ui/Menu";
 import NonClickable from "./origamiLetter/NonClickable";
@@ -18,51 +17,48 @@ function Experience() {
     const { isNonClickable } = useStateContext();
     const { isLetterVisible } = useStateContext();
     const { isCameraMoving } = useStateContext();
+    const origamiTextures = [
+        "/textures/linkdin_logo.png",
+        "/textures/resume_logo.png",
+        "/textures/github_logo.png",
+    ];
     const [cameraPosition, setCameraPosition] = useState([0, 0, 8]);
     const [isRotationOrigami, setIsRotationOrigami] = useState([0, 0, 0])
     const { origamiIndex } = useStateContext()
     const texturePaths = [
-        "/textures/05_anahanum.jpg",
-        "/textures/07_angelina_bagdasaryan.jpg",
-        "/textures/13_daniil_protasov.jpg",
-        "/textures/22_alla_dimareva.jpg",
-        "/textures/24_alla_dimareva.jpg",
-        "/textures/26_arina_kashchavtseva.jpg",
-        "/textures/49_angelina_bagdasaryan.jpg",
-        "/textures/01.jpg",
-        "/textures/22_angelina_bagdasaryan.jpg",
-        "/textures/10_Еременко-Э.А..jpg",
-        "/textures/05_alla_dimareva.jpg",
-        "/textures/26_irina_chigrinova.jpg",
+        "/textures/linkdin_preview.png",
+        "/textures/resume.png",
+        "/textures/github_preview.png",
+        
     ]
     // const [isPositionOrigami, setIsPositionOrigami] = useState();
     // const [isPositionOrigami1, setIsPositionOrigami1] = useState([-2, 2.5, 0]);
     // const [isPositionOrigami2, setIsPositionOrigami2] = useState([-1.5, -1.5, 0]);
-    let positionOrigamies = []
+    const positionOrigamies = [
+        [-3, -2.5, 1, 0],
+        [0, 1.5, 1, 1],
+        [3, -2.5, 1, 2],
+    ];
     const startingPos = 0
     let y = -5;
     let x = -25
-    for (let i = 0; i < 12; i++) {
+    // for (let i = 0; i < 3; i++) {
 
-        if (i % 5 === 0) {
-            y += 4
-            x = -15
-        }
-        positionOrigamies.push([startingPos + x, startingPos + y, startingPos, i])
-        x += 7
-    }
+    //     if (i % 5 === 0) {
+    //         y += 4
+    //         x = -15
+    //     }
+    //     positionOrigamies.push([startingPos + x, startingPos + y, startingPos, i])
+    //     x += 7
+    // }
 
     let rotationOrigamies = []
     function setRotation() {
-        const min = -0.5;
-        const max = 0.5;
-        for (let i = 0; i < 50; i++) {
-            const rotationX = Math.random() * (max - min) + min;
-            const rotationY = Math.random() * (max - min) + min;
-            const rotationZ = Math.random() * (max - min) + min;
-            rotationOrigamies.push([rotationX, rotationY, rotationZ]);
-        }
-        setIsRotationOrigami(rotationOrigamies)
+    setIsRotationOrigami([
+            [0, 0, 0],
+            [0, 0, 0],
+            [0, 0, 0],
+        ]);
     }
     useEffect(() => {
         setRotation();
@@ -129,16 +125,16 @@ function Experience() {
                 }}
                 camera={{
                     ref: { cameraRef },
-                    position: [0, 1, 18],
+                    position: [0, 1, 8],
                     rotation: [0, THREE.MathUtils.degToRad(0), 0],
-                    fov: 100,
+                    fov: 75,
                     aspect: window.innerWidth / window.innerHeight,
                     near: 0.1,
                     far: 1000,
 
                 }}
 
-                onWheel={moveCamera}
+                // onWheel={moveCamera}
                 gl={{
                     antialias: true,
                     toneMapping: THREE.LinearToneMapping,
@@ -152,9 +148,15 @@ function Experience() {
 
                 {isLetterClicked && (<Origami texturePaths={texturePaths[origamiIndex]} />)}
 
-                {isLetterVisible && positionOrigamies.map((position, index) => (
-                    <OrigamiPlane key={index} positionOrigami={positionOrigamies[index]} rotationOrigami={isRotationOrigami[index]} />
-                ))}
+                {isLetterVisible &&
+                    positionOrigamies.map((position, index) => (
+                        <OrigamiPlane
+                            key={index}
+                            positionOrigami={positionOrigamies[index]}
+                            rotationOrigami={isRotationOrigami[index]}
+                            texturePath={origamiTextures[index]}
+                        />
+                    ))}
 
                 {/* {isLetterVisible && (<OrigamiPlane positionOrigami={positionOrigamies[0]} rotationOrigami={isRotationOrigami} />)} */}
                 <Camera cameraPosition={cameraPosition} />
@@ -166,17 +168,17 @@ function Experience() {
                     factor={4}
                 /> */}
                 <Sparkles
-                    count={10000}
+                    count={1000}
                     color={"orange"}
-                    speed={1}
+                    speed={1.5}
                     scale={[40, 40, 20]}
                     size={3}
-                    noise={0.6}
+                    noise={0.8}
                 />
                 {/* Add background stars */}
                 {/* HELPERS */}
                 {/* <axesHelper args={[50]} position={[0, 0, 0]} /> */}
-                <Stats />
+                
             </Canvas>
             <Menu />
             <OrigamiInfoDetails />
