@@ -4,12 +4,12 @@ import { Sparkles } from '@react-three/drei'; // Import OrbitControls and Stars 
 
 // import { OrbitControls, Stars, Sky } from '@react-three/drei'; // Import OrbitControls and Stars for camera control and background stars
 import * as THREE from "three";
-import Origami from "./OrigamiLetter/Origami";
-import OrigamiPlane from "./OrigamiLetter/OrigamiPlane"
+import Origami from "./origamiLetter/Origami";
+import OrigamiPlane from "./origamiLetter/OrigamiPlane"
 import Camera from "./Camera";
-import { useStateContext } from "./GlobalContext/StateContext";
+import { useStateContext } from "./globalContext/StateContext";
 import Menu from "./ui/Menu";
-import NonClickable from "./OrigamiLetter/NonClickable";
+import NonClickable from "./origamiLetter/NonClickable";
 import OrigamiInfoDetails from "./ui/OrigamiInfoDetails";
 function Experience() {
     const { isLetterClicked } = useStateContext();

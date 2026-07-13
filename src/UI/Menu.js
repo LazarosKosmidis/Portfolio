@@ -1,5 +1,5 @@
 import React from "react";
-import { useStateContext } from "../GlobalContext/StateContext.js";
+import { useStateContext } from "../globalContext/StateContext.js";
 import { IconButton } from "@mui/material";
 import ClearIcon from "@mui/icons-material/Clear";
 

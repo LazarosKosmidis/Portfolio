@@ -1,7 +1,7 @@
 import { useFrame } from "@react-three/fiber";
 import React, { useRef, useState } from "react";
 import * as THREE from "three";
-import { useStateContext } from "../GlobalContext/StateContext.js";
+import { useStateContext } from "../globalContext/StateContext.js";
 import { TextureLoader } from "three";
 import gsap from "gsap";
 import { useLoader } from "@react-three/fiber/dist/react-three-fiber.cjs";
