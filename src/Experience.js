@@ -8,9 +8,9 @@ import Origami from "./OrigamiLetter/Origami";
 import OrigamiPlane from "./OrigamiLetter/OrigamiPlane"
 import Camera from "./Camera";
 import { useStateContext } from "./GlobalContext/StateContext";
-import Menu from "./Ui/Menu";
+import Menu from "./UI/Menu";
 import NonClickable from "./OrigamiLetter/NonClickable";
-import OrigamiInfoDetails from "./Ui/OrigamiInfoDetails";
+import OrigamiInfoDetails from "./UI/OrigamiInfoDetails";
 function Experience() {
     const { isLetterClicked } = useStateContext();
     const { isNonClickable } = useStateContext();
