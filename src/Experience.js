@@ -139,7 +139,7 @@ function Experience() {
                     factor={4}
                 /> */}
                 <Sparkles
-                    count={1000}
+                    count={3000}
                     color={"orange"}
                     speed={1.5}
                     scale={[40, 40, 20]}
@@ -154,7 +154,11 @@ function Experience() {
             <Menu />
             <OrigamiInfoDetails />
             {isNonClickable && <NonClickable />}
-
+            <div className="portfolio-info">
+                <h2>Lazaros Kosmidis</h2>
+                <p>Software Engineer</p>
+                 <span>lazaroskosmidis@gmail.com</span>
+            </div>
         </div>
     );
 }

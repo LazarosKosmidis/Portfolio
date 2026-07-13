@@ -36,3 +36,32 @@
     transform: rotate(360deg);
   }
 }
+.portfolio-info {
+    position: fixed;
+    bottom: 35px;
+    right: 35px;
+    color: white;
+    text-align: right;
+    z-index: 1000;
+    user-select: none;
+    pointer-events: none;
+}
+
+.portfolio-info h2 {
+    margin: 0;
+    font-size: 32px;
+    font-weight: 600;
+}
+
+.portfolio-info p {
+    margin: 4px 0;
+    font-size: 18px;
+    color: rgba(255, 255, 255, 0.75);
+}
+
+.portfolio-info span {
+    display: block;
+    margin-top: 10px;
+    font-size: 15px;
+    color: rgba(255, 255, 255, 0.6);
+}

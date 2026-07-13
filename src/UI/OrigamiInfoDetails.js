@@ -37,7 +37,7 @@ const OrigamiInfoDetails = () => {
 
             quote: "Always learning. Always building.",
 
-            skills: "⚡ React • Three.js • C# • Java • Python",
+            skills: "React • Three.js • C# • Java • Python",
 
             button1: "📄 Open Resume",
             
