@@ -168,8 +168,9 @@ function Experience() {
                 <span>lazaros.kosmidis99@gmail.com</span>
 
                 <div className="portfolio-hint">
-                    Click an origami to explore my portfolio
+                    Interactive 3D Portfolio
                     <br />
+                    Built with Three.js & React
                 </div>
             </div>
         </div>
