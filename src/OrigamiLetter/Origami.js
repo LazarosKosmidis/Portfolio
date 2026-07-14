@@ -115,10 +115,10 @@ const Origami = ({ positionOrigami, texturePaths }) => {
                 document.body.style.cursor = "pointer";
 
                 gsap.to(e.object.scale, {
-                    x: 1.2,
-                    y: 1.2,
-                    z: 1.2,
-                    duration: 0.25,
+                    x: 1.12,
+                    y: 1.12,
+                    z: 1.12,
+                    duration: 0.35,
                 });
             }}
             onPointerOut={(e) => {

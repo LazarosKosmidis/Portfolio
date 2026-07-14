@@ -20,6 +20,11 @@ function Experience() {
         "/textures/resume_logo.png",
         "/textures/github_logo.png",
     ];
+    const origamiLabels = [
+        "LinkedIn",
+        "Resume",
+        "GitHub",
+    ];
     const [cameraPosition, setCameraPosition] = useState([0, 0, 8]);
     const [isRotationOrigami, setIsRotationOrigami] = useState([0, 0, 0])
     const { origamiIndex } = useStateContext()
@@ -123,6 +128,7 @@ function Experience() {
                     positionOrigamies.map((_, index) => (
                         <OrigamiPlane
                             key={index}
+                            label={origamiLabels[index]}
                             positionOrigami={positionOrigamies[index]}
                             rotationOrigami={isRotationOrigami[index]}
                             texturePath={origamiTextures[index]}
@@ -164,7 +170,6 @@ function Experience() {
                 <div className="portfolio-hint">
                     Click an origami to explore my portfolio
                     <br />
-                    Resume • GitHub • LinkedIn
                 </div>
             </div>
         </div>

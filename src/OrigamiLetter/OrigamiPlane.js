@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useFrame } from "@react-three/fiber";
+import { Text } from "@react-three/drei";
 import { useStateContext } from "../GlobalContext/StateContext.js";
 import { TextureLoader } from "three";
 import { useLoader } from "@react-three/fiber";
@@ -10,18 +11,22 @@ const OrigamiPlane = ({
         positionOrigami,
         rotationOrigami,
         texturePath,
+        label,
     }) => {
     const planeRef = useRef();
     const sphereCollider = useRef();
     const materialRef = useRef();
+    const textRef = useRef();
     const baseZ = useRef(positionOrigami[2]);
     const { setIsLetterClicked } = useStateContext();
     const { setIsLetterVisible } = useStateContext();
     const { setIsNonClickable } = useStateContext();
     const { setOrigamiIndex } = useStateContext()
+    const [labelOpacity, setLabelOpacity] = useState(1);
 
     const { setIsCameraMoving } = useStateContext();
     const [isOrigamiClicked, setIsOrigamiClicked] = useState(false);
+    const [isHovered, setIsHovered] = useState(false);
     const { camera } = useThree(); // Access to the camera
 
     const [isPosition, setPosition] = useState(positionOrigami)
@@ -148,7 +153,6 @@ const OrigamiPlane = ({
             handleOpacity();
 
             if (!isOrigamiClicked) return;
-
             setDoAnim1(true);
             setStartingAngle(Math.PI);
         }, [isOrigamiClicked]);
@@ -160,8 +164,10 @@ const OrigamiPlane = ({
             createNewGeometry(geometry, 1, 1);
         }, [doCreate1]);
 
-    const handlePointerOver = () => {
+        
 
+    const handlePointerOver = () => {
+        setIsHovered(true);
         gsap.killTweensOf(planeRef.current.position);
         gsap.killTweensOf(planeRef.current.rotation);
 
@@ -185,7 +191,7 @@ const OrigamiPlane = ({
     };
 
     const handlePointerOut = () => {
-
+        setIsHovered(false);
         gsap.killTweensOf(planeRef.current.position);
         gsap.killTweensOf(planeRef.current.rotation);
 
@@ -317,6 +323,11 @@ const OrigamiPlane = ({
                             setIsOrigamiClicked(true)
                             // handlePointerOut();
                             handlePointerOver();
+                            gsap.to(textRef.current, {
+                                fillOpacity: 0,
+                                duration: 0.5,
+                                ease: "power2.out",
+                            });
                             setTimeout(() => {
                                 setIsNonClickable(false);
                                 setIsLetterClicked((prev) => !prev);
@@ -336,8 +347,19 @@ const OrigamiPlane = ({
 
                         />
                     </mesh>
+                    <Text
+                        ref={textRef}
+                        position={[0, -1.45, 0.02]}
+                        fontSize={0.27}
+                        color={(isHovered || isOrigamiClicked) ? "#ededed" : "#bdbdbd"}
+                        fillOpacity={1}
+                        anchorX="center"
+                        anchorY="middle"
+                    >
+                        {label}
+                    </Text>
                 </mesh>
-            
+                
         </group >
 
     );
