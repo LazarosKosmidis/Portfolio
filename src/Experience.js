@@ -31,7 +31,7 @@ function Experience() {
     const texturePaths = [
         "/textures/linkdin_preview.png",
         "/textures/resume.png",
-        "/textures/github_preview.png",
+        "/textures/github_preview_1200x2100.png",
         
     ]
     // const [isPositionOrigami, setIsPositionOrigami] = useState();
