@@ -88,6 +88,19 @@ const OrigamiInfoDetails = () => {
         }
     };
 
+    const handleProject1 = () => {
+        window.open(
+            "https://github.com/LazarosKosmidis/National-Theatre-Costume-Gallery",
+            "_blank"
+        );
+    };
+
+    const handleProject2 = () => {
+        window.open(
+            "https://github.com/LazarosKosmidis/military-unit-web-portal",
+            "_blank"
+        );
+    };
     const handleDownloadResume = () => {
         const link = document.createElement("a");
         link.href = "/textures/LAZAROS_KOSMIDIS_CV.pdf";
@@ -203,49 +216,108 @@ const OrigamiInfoDetails = () => {
                         {page.skills}
                     </p>
 
-                    <Box
-                        sx={{
-                            marginTop: "35px",
-                            display: "flex",
-                            flexDirection: "column",
-                            gap: "18px",
-                            fontSize: "25px",
-                        }}
-                    >
-                        <Box
-                            onClick={handlePrimaryAction}
-                            sx={{
-                                cursor: "pointer",
-                                width: "fit-content",
-                                transition: "0.2s",
-                                userSelect: "none",
-                                "&:hover": {
-                                    color: "#ffb347",
-                                    transform: "translateX(6px)",
-                                },
-                            }}
-                        >
-                            {page.button1}
-                        </Box>
+    <Box
+    sx={{
+        marginTop: "35px",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "flex-start",
+        gap: "18px",
+    }}
+>
+    {/* Main Button */}
+    <Box
+        onClick={handlePrimaryAction}
+        sx={{
+            cursor: "pointer",
+            width: "fit-content",
+            fontSize: "25px",
+            transition: "0.2s",
+            userSelect: "none",
 
-                        {page.button2 && (
-                            <Box
-                                onClick={handleDownloadResume}
-                                sx={{
-                                    cursor: "pointer",
-                                    width: "fit-content",
-                                    transition: "0.2s",
-                                    userSelect: "none",
-                                    "&:hover": {
-                                        color: "#ffb347",
-                                        transform: "translateX(6px)",
-                                    },
-                                }}
-                            >
-                                {page.button2}
-                            </Box>
-                        )}
-                    </Box>
+            "&:hover": {
+                color: "#ffb347",
+                transform: "translateX(6px)",
+            },
+        }}
+    >
+        {page.button1}
+    </Box>
+
+
+    {/* GitHub Projects */}
+    {origamiIndex === 2 && (
+        <Box
+            sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "flex-start",
+                gap: "12px",
+                marginTop: "5px",
+            }}
+        >
+            <Box
+                onClick={handleProject1}
+                sx={{
+                    cursor: "pointer",
+                    width: "fit-content",
+                    fontSize: "18px",
+                    color: "#cfcfcf",
+                    transition: "0.2s",
+                    userSelect: "none",
+
+                    "&:hover": {
+                        color: "#ffb347",
+                        transform: "translateX(6px)",
+                    },
+                }}
+            >
+                National Theatre Costume Gallery →
+            </Box>
+
+            <Box
+                onClick={handleProject2}
+                sx={{
+                    cursor: "pointer",
+                    width: "fit-content",
+                    fontSize: "18px",
+                    color: "#cfcfcf",
+                    transition: "0.2s",
+                    userSelect: "none",
+
+                    "&:hover": {
+                        color: "#ffb347",
+                        transform: "translateX(6px)",
+                    },
+                }}
+            >
+                Military Unit Web Portal →
+            </Box>
+        </Box>
+    )}
+
+
+    {/* Optional second button */}
+    {page.button2 && (
+        <Box
+            onClick={handleDownloadResume}
+            sx={{
+                cursor: "pointer",
+                width: "fit-content",
+                fontSize: "20px",
+                transition: "0.2s",
+                userSelect: "none",
+
+                "&:hover": {
+                    color: "#ffb347",
+                    transform: "translateX(6px)",
+                },
+            }}
+        >
+            {page.button2}
+        </Box>
+    )}
+</Box>
                 </Box>
             )}
         </>
