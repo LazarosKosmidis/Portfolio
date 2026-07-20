@@ -1,6 +1,7 @@
 import React, { useRef, useState, useEffect, useCallback } from "react";
 import { Canvas } from "@react-three/fiber";
 import { Sparkles } from '@react-three/drei'; // Import OrbitControls and Stars for camera control and background stars
+import gsap from "gsap";
 
 // import { OrbitControls, Stars, Sky } from '@react-three/drei'; // Import OrbitControls and Stars for camera control and background stars
 import * as THREE from "three";
@@ -15,6 +16,7 @@ function Experience() {
     const { isLetterClicked } = useStateContext();
     const { isNonClickable } = useStateContext();
     const { isLetterVisible } = useStateContext();
+    const enterRef = useRef(null);
     const origamiTextures = [
         "/textures/linkdin_logo.png",
         "/textures/resume_logo.png",
@@ -25,7 +27,7 @@ function Experience() {
         "Resume",
         "GitHub",
     ];
-    const [cameraPosition, setCameraPosition] = useState([0, 0, 8]);
+    const [cameraPosition, setCameraPosition] = useState([-20, 0, 7]);
     const [isRotationOrigami, setIsRotationOrigami] = useState([0, 0, 0])
     const { origamiIndex } = useStateContext()
     const texturePaths = [
@@ -44,7 +46,32 @@ function Experience() {
     ];
     
 
-    
+    const enterPortfolio = () => {
+        gsap.to(enterRef.current, {
+            opacity: 0,
+            y: 20,
+            duration: 0.7,
+            ease: "power2.out",
+            onComplete: () => {
+                enterRef.current.style.display = "none";
+            },
+        });
+
+        const camera = {
+            x: cameraPosition[0],
+            y: cameraPosition[1],
+            z: cameraPosition[2],
+        };
+
+        gsap.to(camera, {
+            x: 0,
+            duration: 5,
+            ease: "power2.inOut",
+            onUpdate: () => {
+                setCameraPosition([camera.x, camera.y, camera.z]);
+            },
+        });
+    };
     
     useEffect(() => {
     setIsRotationOrigami([
@@ -102,7 +129,7 @@ function Experience() {
                     background: "black",
                 }}
                 camera={{
-                    position: [0, 1, 8],
+                    position: [-20, 0, 7],
                     rotation: [0, THREE.MathUtils.degToRad(0), 0],
                     fov: 75,
                     aspect: window.innerWidth / window.innerHeight,
@@ -145,18 +172,40 @@ function Experience() {
                     factor={4}
                 /> */}
                 <Sparkles
-                    count={3000}
+                    count={2000}
+                    dpr={1}
                     color={"orange"}
-                    speed={1.5}
-                    scale={[40, 40, 20]}
+                    speed={1}
+                    scale={[60, 20, 10]}
                     size={3}
-                    noise={0.8}
+                    noise={0.3}
                 />
                 {/* Add background stars */}
                 {/* HELPERS */}
                 {/* <axesHelper args={[50]} position={[0, 0, 0]} /> */}
                 
             </Canvas>
+            <div className="enter-container"
+                ref={enterRef}    
+            >
+                <p className="enter-text">Click to begin</p>
+                <button
+                    className="enter-btn"
+                    onClick={enterPortfolio}
+                    style={{
+                        position: "fixed",
+                        left: "50%",
+                        bottom: "60px",
+                        transform: "translateX(-50%)",
+                        padding: "15px 35px",
+                        fontSize: "18px",
+                        cursor: "pointer",
+                        zIndex: 10,
+                    }}
+                >
+                    Enter Portfolio →
+                </button>
+            </div>
             <Menu />
             <OrigamiInfoDetails />
             {isNonClickable && <NonClickable />}
